@@ -1,0 +1,319 @@
+postal 3 22993
+video: https://youtu.be/3CGtuUkQwyA
+
+;*****************************************************************************
+; Universidad del Valle de Guatemala
+; Programación de Microcontroladores
+; Archivo: Contador_60s_Multiplexado_Debounce
+; Hardware: ATMEGA328P
+; Autor: Miguel Angel Donis
+; Carnet: 22993
+;*****************************************************************************
+
+.include "M328PDEF.inc"
+
+;=============================
+; REGISTROS
+;=============================
+.def regManual  = R21              ; Guardar contador manual (0–15)
+.def unidades   = R22              ; Guardar unidades de segundos (0–9)
+.def decenas    = R23              ; Guardar decenas de segundos (0–5)
+.def tempReg    = R16              ; Registro temporal
+.def auxReg     = R17              ; Registro auxiliar para tabla
+.def tickCount  = R19              ; Contador de ticks de ~10 ms para formar 1 s
+
+;=============================
+; VARIABLES EN SRAM (debounce)
+;=============================
+.dseg
+dbInc:       .byte 1               ; Contador debounce para botón incremento
+dbDec:       .byte 1               ; Contador debounce para botón decremento
+reqFlags:    .byte 1               ; Bits de solicitud: bit0=inc, bit1=dec
+
+.cseg
+
+;=============================
+; VECTORES
+;=============================
+.org 0x0000
+    rjmp INIT                      ; Saltar a inicialización
+
+.org 0x0008
+    rjmp ISR_PCINT1                ; Interrupción por cambio en PORTC
+
+.org 0x0020
+    rjmp ISR_TIMER0_OVF            ; Interrupción overflow Timer0
+
+
+;=============================
+; TABLA 7 SEGMENTOS 0–9 (cátodo común)
+;=============================
+Tabla7seg:
+.DB 0x3F,0x06,0x5B,0x4F            ; 0,1,2,3
+.DB 0x66,0x6D,0x7D,0x07            ; 4,5,6,7
+.DB 0x7F,0x6F                      ; 8,9
+
+
+;*****************************************************************************
+; BLOQUE 1: INICIALIZACIÓN
+;*****************************************************************************
+INIT:
+
+    clr r1                         ; Mantener R1 en cero
+
+    ldi tempReg, LOW(RAMEND)       ; Cargar parte baja de RAMEND
+    out SPL, tempReg               ; Configurar puntero de pila bajo
+    ldi tempReg, HIGH(RAMEND)      ; Cargar parte alta de RAMEND
+    out SPH, tempReg               ; Configurar puntero de pila alto
+
+    ldi tempReg, 0b00001111        ; Configurar PC0–PC3 como salidas
+    out DDRC, tempReg              ; Escribir DDRC
+
+    ldi tempReg, (1<<PC4)|(1<<PC5) ; Activar pull-up en PC4 y PC5
+    out PORTC, tempReg             ; Escribir PORTC
+
+    ldi tempReg, 0b01111111        ; Configurar PD0–PD6 como salidas
+    out DDRD, tempReg              ; Escribir DDRD
+
+    ldi tempReg, (1<<PB0)|(1<<PB1) ; Configurar PB0 y PB1 como salidas
+    out DDRB, tempReg              ; Escribir DDRB
+
+    cbi PORTB, PB0                 ; Apagar display decenas
+    cbi PORTB, PB1                 ; Apagar display unidades
+
+    ; Habilitar PCINT12 (PC4) y PCINT13 (PC5)
+    ldi tempReg, (1<<PCINT12)|(1<<PCINT13) ; Seleccionar pines con PCINT
+    sts PCMSK1, tempReg            ; Guardar máscara de PCINT1
+
+    ldi tempReg, (1<<PCIE1)        ; Habilitar grupo PCINT1
+    sts PCICR, tempReg             ; Guardar control PCICR
+
+    ; Timer0 base ~10 ms
+    ldi tempReg, 100               ; Precarga para ~9.984 ms con prescaler 1024
+    out TCNT0, tempReg             ; Cargar TCNT0
+
+    ldi tempReg, (1<<CS02)|(1<<CS00) ; Prescaler 1024
+    out TCCR0B, tempReg            ; Configurar Timer0
+
+    ldi tempReg, (1<<TOIE0)        ; Habilitar interrupción overflow Timer0
+    sts TIMSK0, tempReg            ; Guardar TIMSK0
+
+    ldi regManual, 0               ; Inicializar contador manual
+    ldi unidades, 0                ; Inicializar unidades
+    ldi decenas, 0                 ; Inicializar decenas
+    ldi tickCount, 0               ; Inicializar ticks
+
+    ldi tempReg, 0                 ; Cargar cero para variables debounce
+    sts dbInc, tempReg             ; Poner debounce inc en 0
+    sts dbDec, tempReg             ; Poner debounce dec en 0
+    sts reqFlags, tempReg          ; Limpiar banderas de solicitud
+
+    sei                            ; Habilitar interrupciones globales
+
+
+;*****************************************************************************
+; BLOQUE 2: LOOP PRINCIPAL (multiplexado)
+;*****************************************************************************
+MAIN_LOOP:
+
+    ; ---- Mostrar UNIDADES ----
+    cbi PORTB, PB0                 ; Apagar display decenas
+    ldi ZH, HIGH(Tabla7seg<<1)     ; Cargar dirección alta tabla
+    ldi ZL, LOW(Tabla7seg<<1)      ; Cargar dirección baja tabla
+    add ZL, unidades               ; Desplazar tabla según unidades
+    adc ZH, r1                     ; Ajustar acarreo
+    lpm auxReg, Z                  ; Cargar patrón de segmentos
+    out PORTD, auxReg              ; Enviar patrón a PD0–PD6
+    sbi PORTB, PB1                 ; Encender display unidades
+    rcall DelayPequeno             ; Retardo pequeño para visibilidad
+    cbi PORTB, PB1                 ; Apagar display unidades
+
+    ; ---- Mostrar DECENAS ----
+    cbi PORTB, PB1                 ; Apagar display unidades
+    ldi ZH, HIGH(Tabla7seg<<1)     ; Cargar dirección alta tabla
+    ldi ZL, LOW(Tabla7seg<<1)      ; Cargar dirección baja tabla
+    add ZL, decenas                ; Desplazar tabla según decenas
+    adc ZH, r1                     ; Ajustar acarreo
+    lpm auxReg, Z                  ; Cargar patrón de segmentos
+    out PORTD, auxReg              ; Enviar patrón a PD0–PD6
+    sbi PORTB, PB0                 ; Encender display decenas
+    rcall DelayPequeno             ; Retardo pequeño para visibilidad
+    cbi PORTB, PB0                 ; Apagar display decenas
+
+    ; ---- Actualizar LEDs del contador manual ----
+    in auxReg, PORTC               ; Leer PORTC
+    andi auxReg, 0b11110000        ; Limpiar PC0–PC3
+    or auxReg, regManual           ; Insertar valor del contador manual
+    out PORTC, auxReg              ; Actualizar LEDs
+
+    rjmp MAIN_LOOP                 ; Repetir bucle
+
+
+;*****************************************************************************
+; BLOQUE 3: ISR PCINT1 (solo arma el debounce)
+;*****************************************************************************
+ISR_PCINT1:
+
+    push tempReg                   ; Guardar registro temporal
+    in tempReg, SREG               ; Leer estado del CPU
+    push tempReg                   ; Guardar SREG
+
+    in tempReg, PINC               ; Leer pines de PORTC
+
+    ; ---- Si PC4 está presionado (0), iniciar debounce de incremento ----
+    sbrc tempReg, PC4              ; Si PC4=1, no presionado
+    rjmp CHECK_DEC_BTN             ; Saltar a revisar decremento
+
+    ldi tempReg, 3                 ; Cargar 3 ticks ≈ 30 ms de debounce
+    sts dbInc, tempReg             ; Guardar debounce incremento
+
+    lds tempReg, reqFlags          ; Cargar banderas
+    ori tempReg, 0b00000001        ; Activar bit0 = solicitud de incremento
+    sts reqFlags, tempReg          ; Guardar banderas
+
+    ; Deshabilitar PC4 temporalmente para evitar múltiples interrupciones
+    ldi tempReg, (1<<PCINT13)      ; Dejar solo PC5 habilitado
+    sts PCMSK1, tempReg            ; Actualizar máscara
+
+CHECK_DEC_BTN:
+
+    ; ---- Si PC5 está presionado (0), iniciar debounce de decremento ----
+    in tempReg, PINC               ; Leer nuevamente PINC
+    sbrc tempReg, PC5              ; Si PC5=1, no presionado
+    rjmp END_PCINT_ISR             ; Salir
+
+    ldi tempReg, 3                 ; Cargar 3 ticks ≈ 30 ms de debounce
+    sts dbDec, tempReg             ; Guardar debounce decremento
+
+    lds tempReg, reqFlags          ; Cargar banderas
+    ori tempReg, 0b00000010        ; Activar bit1 = solicitud de decremento
+    sts reqFlags, tempReg          ; Guardar banderas
+
+    ; Deshabilitar PC5 temporalmente para evitar múltiples interrupciones
+    ldi tempReg, (1<<PCINT12)      ; Dejar solo PC4 habilitado
+    sts PCMSK1, tempReg            ; Actualizar máscara
+
+END_PCINT_ISR:
+
+    ldi tempReg, (1<<PCIF1)        ; Preparar limpieza bandera PCINT1
+    sts PCIFR, tempReg             ; Limpiar bandera PCINT1
+
+    pop tempReg                    ; Recuperar SREG
+    out SREG, tempReg              ; Restaurar SREG
+    pop tempReg                    ; Recuperar tempReg
+    reti                           ; Retornar
+
+
+;*****************************************************************************
+; BLOQUE 4: ISR Timer0 (tiempo + debounce + conteo 60 s)
+;*****************************************************************************
+ISR_TIMER0_OVF:
+
+    push tempReg                   ; Guardar tempReg
+    push auxReg                    ; Guardar auxReg
+    in tempReg, SREG               ; Leer SREG
+    push tempReg                   ; Guardar SREG
+
+    ldi tempReg, 100               ; Cargar precarga Timer0
+    out TCNT0, tempReg             ; Reiniciar Timer0
+
+    ; ---------- Debounce incremento ----------
+    lds tempReg, dbInc             ; Cargar contador debounce inc
+    cpi tempReg, 0                 ; Comparar con 0
+    breq SKIP_DB_INC               ; Si es 0, no hay debounce activo
+
+    dec tempReg                    ; Decrementar debounce inc
+    sts dbInc, tempReg             ; Guardar nuevo valor
+    brne SKIP_DB_INC               ; Si no llegó a 0, no validar todavía
+
+    ; Cuando llega a 0, validar botón estable
+    in auxReg, PINC                ; Leer PINC
+    sbrc auxReg, PC4               ; Si PC4=1, ya no está presionado
+    rjmp REENABLE_PC4              ; Rehabilitar sin contar
+
+    lds auxReg, reqFlags           ; Cargar banderas
+    sbrs auxReg, 0                 ; Si bit0 no está activo
+    rjmp REENABLE_PC4              ; No hacer nada
+
+    andi auxReg, 0b11111110        ; Limpiar bit0 (consumir solicitud)
+    sts reqFlags, auxReg           ; Guardar banderas
+
+    inc regManual                  ; Incrementar contador manual
+    andi regManual, 0x0F           ; Mantener 4 bits
+
+REENABLE_PC4:
+    ; Rehabilitar PC4 en PCMSK1 (junto con el que esté activo)
+    ldi tempReg, (1<<PCINT12)|(1<<PCINT13) ; Habilitar PC4 y PC5
+    sts PCMSK1, tempReg            ; Guardar máscara
+
+SKIP_DB_INC:
+
+    ; ---------- Debounce decremento ----------
+    lds tempReg, dbDec             ; Cargar contador debounce dec
+    cpi tempReg, 0                 ; Comparar con 0
+    breq SKIP_DB_DEC               ; Si es 0, no hay debounce activo
+
+    dec tempReg                    ; Decrementar debounce dec
+    sts dbDec, tempReg             ; Guardar nuevo valor
+    brne SKIP_DB_DEC               ; Si no llegó a 0, no validar todavía
+
+    ; Cuando llega a 0, validar botón estable
+    in auxReg, PINC                ; Leer PINC
+    sbrc auxReg, PC5               ; Si PC5=1, ya no está presionado
+    rjmp REENABLE_PC5              ; Rehabilitar sin contar
+
+    lds auxReg, reqFlags           ; Cargar banderas
+    sbrs auxReg, 1                 ; Si bit1 no está activo
+    rjmp REENABLE_PC5              ; No hacer nada
+
+    andi auxReg, 0b11111101        ; Limpiar bit1 (consumir solicitud)
+    sts reqFlags, auxReg           ; Guardar banderas
+
+    dec regManual                  ; Decrementar contador manual
+    andi regManual, 0x0F           ; Mantener 4 bits
+
+REENABLE_PC5:
+    ; Rehabilitar PC4 y PC5 en PCMSK1
+    ldi tempReg, (1<<PCINT12)|(1<<PCINT13) ; Habilitar PC4 y PC5
+    sts PCMSK1, tempReg            ; Guardar máscara
+
+SKIP_DB_DEC:
+
+    ; ---------- Conteo de segundos (100 ticks ≈ 1 segundo) ----------
+    inc tickCount                  ; Incrementar ticks
+    cpi tickCount, 100             ; Comparar con 100
+    brne END_TIMER_ISR             ; Si no llegó, salir
+
+    ldi tickCount, 0               ; Reiniciar ticks (pasó ~1 segundo)
+
+    inc unidades                   ; Incrementar unidades
+    cpi unidades, 10               ; ¿Llegó a 10?
+    brne END_TIMER_ISR             ; Si no, salir
+
+    ldi unidades, 0                ; Reset unidades a 0
+    inc decenas                    ; Incrementar decenas
+
+    cpi decenas, 6                 ; ¿Llegó a 60 segundos?
+    brne END_TIMER_ISR             ; Si no, salir
+
+    ldi decenas, 0                 ; Reset decenas
+    ldi unidades, 0                ; Reset unidades
+
+END_TIMER_ISR:
+
+    pop tempReg                    ; Recuperar SREG
+    out SREG, tempReg              ; Restaurar SREG
+    pop auxReg                     ; Recuperar auxReg
+    pop tempReg                    ; Recuperar tempReg
+    reti                           ; Retornar
+
+
+;*****************************************************************************
+; BLOQUE 5: Retardo pequeño para multiplexado
+;*****************************************************************************
+DelayPequeno:
+    ldi tempReg, 50                ; Cargar valor de retardo
+DelayLoop:
+    dec tempReg                    ; Decrementar contador
+    brne DelayLoop                 ; Repetir hasta cero
+    ret                            ; Regresar

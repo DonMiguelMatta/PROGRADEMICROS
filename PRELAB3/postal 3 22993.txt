@@ -1,0 +1,218 @@
+postal 3 22993
+video: https://youtu.be/3CGtuUkQwyA
+
+código: 
+;*****************************************************************************
+; Universidad del Valle de Guatemala
+; Programación de Microcontroladores
+; Archivo: postlab322993
+; Hardware: ATMEGA328P
+; Autor: Miguel Angel Donis
+; Carnet: 22993
+;*****************************************************************************
+
+.include "M328PDEF.inc"            
+
+;=============================
+; REGISTROS
+;=============================
+.def regManual  = R21              ; contador manual
+.def unidades   = R22              ; unidades de segundos
+.def decenas    = R23              ; decenas de segundos
+.def tempReg    = R16              ; uso general
+.def auxReg     = R17              ; tabla display
+.def tickCount  = R19              ; contar interrupciones de 10 ms
+
+.cseg
+
+.org 0x0000
+    rjmp INIT                     
+
+.org 0x0008
+    rjmp ISR_PCINT1                ; Vector interrupción cambio de pin PORTC
+
+.org 0x0020
+    rjmp ISR_TIMER0_OVF            ; Vector interrupción Timer0 overflow
+
+
+;=============================
+; TABLA 7 SEGMENTOS 0–9
+;=============================
+Tabla7seg:
+.DB 0x3F,0x06,0x5B,0x4F            
+.DB 0x66,0x6D,0x7D,0x07            
+.DB 0x7F,0x6F                      
+
+
+;*****************************************************************************
+; INICIALIZACIÓN
+;*****************************************************************************
+INIT:
+
+    clr r1                         ; Limpiar R1 y mantenerlo en cero permanente
+
+    ldi tempReg, LOW(RAMEND)       ; Cargar parte baja del final de RAM
+    out SPL, tempReg               ; Configurar Stack Pointer bajo
+
+    ldi tempReg, HIGH(RAMEND)      ; Cargar parte alta del final de RAM
+    out SPH, tempReg               ; Configurar Stack Pointer alto
+
+    ldi tempReg, 0b00001111        ; Configurar PC0–PC3 como salidas
+    out DDRC, tempReg              ; Escribir configuración en DDRC
+
+    ldi tempReg, (1<<PC4)|(1<<PC5) ; Activar resistencias pull-up en PC4 y PC5
+    out PORTC, tempReg             ; Escribir en PORTC
+
+    ldi tempReg, 0b01111111        ; Configurar PD0–PD6 como salidas
+    out DDRD, tempReg              ; Escribir configuración en DDRD
+
+    ldi tempReg, (1<<PB0)|(1<<PB1) ; Configurar PB0 y PB1 como salidas
+    out DDRB, tempReg              ; Escribir configuración en DDRB
+
+    cbi PORTB, PB0                 ; Apagar display de decenas inicialmente
+    cbi PORTB, PB1                 ; Apagar display de unidades inicialmente
+
+    ldi tempReg, (1<<PCINT12)|(1<<PCINT13) ; Habilitar interrupciones en PC4 y PC5
+    sts PCMSK1, tempReg            ; Guardar en máscara de interrupciones
+
+    ldi tempReg, (1<<PCIE1)        ; Habilitar grupo de interrupciones PORTC
+    sts PCICR, tempReg             ; Guardar en registro de control
+
+    ldi tempReg, 100               ; Cargar precarga del Timer0
+    out TCNT0, tempReg             ; Inicializar contador del Timer0
+
+    ldi tempReg, (1<<CS02)|(1<<CS00) ; Configurar prescaler 1024
+    out TCCR0B, tempReg            ; Activar Timer0
+
+    ldi tempReg, (1<<TOIE0)        ; Habilitar interrupción por overflow
+    sts TIMSK0, tempReg            ; Guardar en máscara del Timer0
+
+    ldi regManual, 0               ; Inicializar contador manual en 0
+    ldi unidades, 0                ; Inicializar unidades en 0
+    ldi decenas, 0                 ; Inicializar decenas en 0
+    ldi tickCount, 0               ; Inicializar contador de ticks en 0
+
+    sei                            ; Habilitar interrupciones globales
+
+
+;*****************************************************************************
+; LOOP PRINCIPAL (MULTIPLEXADO)
+;*****************************************************************************
+MAIN_LOOP:
+
+    cbi PORTB, PB0                 ; Apagar display de decenas
+
+    ldi ZH, HIGH(Tabla7seg<<1)     ; Cargar dirección alta de tabla
+    ldi ZL, LOW(Tabla7seg<<1)      ; Cargar dirección baja de tabla
+    add ZL, unidades               ; Desplazar puntero según valor unidades
+    adc ZH, r1                     ; Ajustar acarreo si ocurre
+    lpm auxReg, Z                  ; Cargar valor correspondiente del display
+    out PORTD, auxReg              ; Enviar patrón a segmentos
+
+    sbi PORTB, PB1                 ; Encender display de unidades
+    rcall DelayPequeno             ; Esperar pequeño tiempo visible
+    cbi PORTB, PB1                 ; Apagar display unidades
+
+    cbi PORTB, PB1                 ; Asegurar unidades apagado
+
+    ldi ZH, HIGH(Tabla7seg<<1)     ; Cargar dirección alta tabla
+    ldi ZL, LOW(Tabla7seg<<1)      ; Cargar dirección baja tabla
+    add ZL, decenas                ; Desplazar según valor decenas
+    adc ZH, r1                     ; Ajustar acarreo
+    lpm auxReg, Z                  ; Cargar patrón de segmentos
+    out PORTD, auxReg              ; Enviar patrón a segmentos
+
+    sbi PORTB, PB0                 ; Encender display de decenas
+    rcall DelayPequeno             ; Esperar pequeño tiempo
+    cbi PORTB, PB0                 ; Apagar display decenas
+
+    in auxReg, PORTC               ; Leer estado actual de PORTC
+    andi auxReg, 0b11110000        ; Limpiar bits PC0–PC3
+    or auxReg, regManual           ; Insertar valor contador manual
+    out PORTC, auxReg              ; Actualizar LEDs manuales
+
+    rjmp MAIN_LOOP                 ; Repetir bucle infinito
+
+
+;*****************************************************************************
+; ISR TIMER0
+;*****************************************************************************
+ISR_TIMER0_OVF:
+
+    push tempReg                   ; Guardar tempReg
+    in tempReg, SREG               ; Leer registro de estado
+    push tempReg                   ; Guardar SREG
+
+    ldi tempReg, 100               ; Cargar nuevamente precarga
+    out TCNT0, tempReg             ; Reiniciar contador Timer0
+
+    inc tickCount                  ; Incrementar contador de interrupciones
+    cpi tickCount, 100             ; Comparar si llegó a 100 (≈1 segundo)
+    brne END_TIMER                 ; Si no, salir
+
+    ldi tickCount, 0               ; Reiniciar contador de ticks
+
+    inc unidades                   ; Incrementar unidades
+    cpi unidades, 10               ; ¿Llegó a 10?
+    brne END_TIMER                 ; Si no, salir
+
+    ldi unidades, 0                ; Reiniciar unidades a 0
+    inc decenas                    ; Incrementar decenas
+
+    cpi decenas, 6                 ; ¿Llegó a 60 segundos?
+    brne END_TIMER                 ; Si no, salir
+
+    ldi decenas, 0                 ; Reiniciar decenas
+    ldi unidades, 0                ; Reiniciar unidades
+
+END_TIMER:
+    pop tempReg                    ; Recuperar SREG
+    out SREG, tempReg              ; Restaurar estado
+    pop tempReg                    ; Recuperar tempReg
+    reti                           ; Retornar de interrupción
+
+
+;*****************************************************************************
+; ISR BOTONES
+;*****************************************************************************
+ISR_PCINT1:
+
+    push tempReg                   ; Guardar tempReg
+    in tempReg, SREG               ; Leer SREG
+    push tempReg                   ; Guardar SREG
+
+    in tempReg, PINC               ; Leer estado actual de botones
+
+    sbrc tempReg, PC4              ; Si PC4=1 (no presionado)
+    rjmp CHECK_DEC                 ; Ir a verificar PC5
+
+    inc regManual                  ; Incrementar contador manual
+    andi regManual, 0x0F           ; Limitar a 4 bits
+    rjmp END_PCINT                 ; Ir a salida
+
+CHECK_DEC:
+    sbrc tempReg, PC5              ; Si PC5=1
+    rjmp END_PCINT                 ; Salir
+
+    dec regManual                  ; Decrementar contador manual
+    andi regManual, 0x0F           ; Limitar a 4 bits
+
+END_PCINT:
+    ldi tempReg, (1<<PCIF1)        ; Preparar limpieza bandera PCINT1
+    sts PCIFR, tempReg             ; Limpiar bandera
+
+    pop tempReg                    ; Recuperar SREG
+    out SREG, tempReg              ; Restaurar SREG
+    pop tempReg                    ; Recuperar tempReg
+    reti                           ; Retornar
+
+
+;*****************************************************************************
+; RETARDO PARA MULTIPLEXADO
+;*****************************************************************************
+DelayPequeno:
+    ldi tempReg, 50                ; Cargar valor de retardo
+DelayLoop:
+    dec tempReg                    ; Decrementar contador
+    brne DelayLoop                 ; Repetir mientras no sea cero
+    ret                            ; Retornar
