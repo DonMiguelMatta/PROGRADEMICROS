@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  D:\migue\Documentos Uni\UVG2026\Programacion de Micros\GIT\PROGRADEMICROS\Proyecto1\Proyecto1_relojs\Proyecto1_relojs\main.asm Mon Mar 16 13:12:06 2026
+AVRASM ver. 2.2.8  D:\migue\Documentos Uni\UVG2026\Programacion de Micros\GIT\PROGRADEMICROS\Proyecto1\Proyecto1_relojs\Proyecto1_relojs\main.asm Mon Mar 16 13:44:05 2026
 
 [builtin](2): Including file 'D:/migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 D:\migue\Documentos Uni\UVG2026\Programacion de Micros\GIT\PROGRADEMICROS\Proyecto1\Proyecto1_relojs\Proyecto1_relojs\main.asm(16): Including file 'D:/migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\M328PDEF.inc'
@@ -1104,7 +1104,6 @@ D:\migue\Documentos Uni\UVG2026\Programacion de Micros\GIT\PROGRADEMICROS\Proyec
                                  ;=============================================================================
                                  ; TABLA DE VECTORES DE INTERRUPCION
                                  ; Cada .org apunta a la direccion fija del vector; se coloca un salto a la ISR.
-                                 ; Los vectores no usados quedan vacios (NOP implicito del hardware).
                                  ;=============================================================================
                                  .org 0x0000
 000000 c038                          rjmp INIT                  ; Vector de reset -> saltar a inicializacion
@@ -1115,7 +1114,6 @@ D:\migue\Documentos Uni\UVG2026\Programacion de Micros\GIT\PROGRADEMICROS\Proyec
                                  .org 0x001C
 00001c c3ca                          rjmp ISR_TIMER0_COMPA      ; Vector Timer0 Compare A -> tono alarma 500 Hz
                                  
-                                 ; Fin de la tabla de vectores del ATmega328P (52 words = 0x0034)
                                  .org 0x0034
                                  
                                  ;=============================================================================

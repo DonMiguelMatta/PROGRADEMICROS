@@ -70,7 +70,6 @@ tono_cnt:       .byte 1        ; Posicion dentro del ciclo ON/OFF del tono (0-49
 ;=============================================================================
 ; TABLA DE VECTORES DE INTERRUPCION
 ; Cada .org apunta a la direccion fija del vector; se coloca un salto a la ISR.
-; Los vectores no usados quedan vacios (NOP implicito del hardware).
 ;=============================================================================
 .org 0x0000
     rjmp INIT                  ; Vector de reset -> saltar a inicializacion
@@ -81,7 +80,6 @@ tono_cnt:       .byte 1        ; Posicion dentro del ciclo ON/OFF del tono (0-49
 .org 0x001C
     rjmp ISR_TIMER0_COMPA      ; Vector Timer0 Compare A -> tono alarma 500 Hz
 
-; Fin de la tabla de vectores del ATmega328P (52 words = 0x0034)
 .org 0x0034
 
 ;=============================================================================
