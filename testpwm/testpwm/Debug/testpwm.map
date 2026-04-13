@@ -2,10 +2,6 @@ Archive member included to satisfy reference by file (symbol)
 
 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
                               D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o (exit)
-d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
-                              main.o (__do_copy_data)
-d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
-                              main.o (__do_clear_bss)
 
 Discarded input sections
 
@@ -14,6 +10,13 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
+ .text          0x00000000        0x0 PWM/PWM0.o
+ .data          0x00000000        0x0 PWM/PWM0.o
+ .bss           0x00000000        0x0 PWM/PWM0.o
+ .text.updateDutyCicle0A
+                0x00000000        0x4 PWM/PWM0.o
+ .text.updateDutyCicle0B
+                0x00000000        0x4 PWM/PWM0.o
  .text          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
@@ -30,38 +33,6 @@ Discarded input sections
                 0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.fixed
                 0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
- .text          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .data          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .bss           0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.mul
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.div
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc   0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.prologue
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.builtins
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.fmul
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.fixed
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .data          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .bss           0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc.mul
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc.div
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc   0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc.prologue
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc.builtins
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc.fmul
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc.fixed
-                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
 
 Memory Configuration
 
@@ -80,6 +51,7 @@ Linker script and memory map
 Address of section .data set to 0x800100
 LOAD D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
 LOAD main.o
+LOAD PWM/PWM0.o
 START GROUP
 LOAD d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a
 END GROUP
@@ -189,7 +161,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x28a
+.text           0x00000000       0xc2
  *(.vectors)
  .vectors       0x00000000       0x68 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -230,10 +202,6 @@ END GROUP
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x00000074       0x16 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
-                0x00000074                __do_copy_data
- .init4         0x0000008a       0x10 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
-                0x0000008a                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -244,65 +212,48 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x0000009a        0x8 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
+ .init9         0x00000074        0x8 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  *(.init9)
  *(.text)
- .text          0x000000a2        0x4 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
-                0x000000a2                __vector_22
-                0x000000a2                __vector_1
-                0x000000a2                __vector_24
-                0x000000a2                __vector_12
-                0x000000a2                __bad_interrupt
-                0x000000a2                __vector_6
-                0x000000a2                __vector_3
-                0x000000a2                __vector_23
-                0x000000a2                __vector_25
-                0x000000a2                __vector_11
-                0x000000a2                __vector_17
-                0x000000a2                __vector_19
-                0x000000a2                __vector_7
-                0x000000a2                __vector_5
-                0x000000a2                __vector_4
-                0x000000a2                __vector_9
-                0x000000a2                __vector_2
-                0x000000a2                __vector_15
-                0x000000a2                __vector_8
-                0x000000a2                __vector_14
-                0x000000a2                __vector_10
-                0x000000a2                __vector_16
-                0x000000a2                __vector_18
-                0x000000a2                __vector_20
-                0x000000a6                . = ALIGN (0x2)
+ .text          0x0000007c        0x4 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
+                0x0000007c                __vector_22
+                0x0000007c                __vector_1
+                0x0000007c                __vector_24
+                0x0000007c                __vector_12
+                0x0000007c                __bad_interrupt
+                0x0000007c                __vector_6
+                0x0000007c                __vector_3
+                0x0000007c                __vector_23
+                0x0000007c                __vector_25
+                0x0000007c                __vector_11
+                0x0000007c                __vector_13
+                0x0000007c                __vector_17
+                0x0000007c                __vector_19
+                0x0000007c                __vector_7
+                0x0000007c                __vector_5
+                0x0000007c                __vector_4
+                0x0000007c                __vector_9
+                0x0000007c                __vector_2
+                0x0000007c                __vector_21
+                0x0000007c                __vector_15
+                0x0000007c                __vector_8
+                0x0000007c                __vector_14
+                0x0000007c                __vector_10
+                0x0000007c                __vector_16
+                0x0000007c                __vector_18
+                0x0000007c                __vector_20
+                0x00000080                . = ALIGN (0x2)
  *(.text.*)
- .text.setup    0x000000a6       0x16 main.o
-                0x000000a6                setup
- .text.initADC  0x000000bc       0x16 main.o
-                0x000000bc                initADC
- .text.initTMR1
-                0x000000d2       0x1e main.o
-                0x000000d2                initTMR1
- .text.main     0x000000f0       0x26 main.o
-                0x000000f0                main
- .text.write7Segments
-                0x00000116       0x2c main.o
-                0x00000116                write7Segments
- .text.updateButtons
-                0x00000142       0x52 main.o
-                0x00000142                updateButtons
- .text.updateAlarm
-                0x00000194       0x1c main.o
-                0x00000194                updateAlarm
- .text.__vector_21
-                0x000001b0       0x48 main.o
-                0x000001b0                __vector_21
- .text.__vector_13
-                0x000001f8       0x8e main.o
-                0x000001f8                __vector_13
-                0x00000286                . = ALIGN (0x2)
+ .text.main     0x00000080       0x1a main.o
+                0x00000080                main
+ .text.initPWM0
+                0x0000009a       0x24 PWM/PWM0.o
+                0x0000009a                initPWM0
+                0x000000be                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000286        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000286                _exit
-                0x00000286                exit
+ .fini9         0x000000be        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000000be                _exit
+                0x000000be                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -321,56 +272,36 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000286        0x4 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000000be        0x4 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000028a                _etext = .
+                0x000000c2                _etext = .
 
-.data           0x00800100       0x10 load address 0x0000028a
-                0x00800100                PROVIDE (__data_start, .)
+.data           0x00800100        0x0 load address 0x000000c2
+                [!provide]                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
- .rodata.hexTable
-                0x00800100       0x10 main.o
-                0x00800100                hexTable
  *(.gnu.linkonce.r*)
-                0x00800110                . = ALIGN (0x2)
-                0x00800110                _edata = .
-                0x00800110                PROVIDE (__data_end, .)
+                0x00800100                . = ALIGN (0x2)
+                0x00800100                _edata = .
+                [!provide]                PROVIDE (__data_end, .)
 
-.bss            0x00800110        0x7
-                0x00800110                PROVIDE (__bss_start, .)
+.bss            0x00800100        0x0
+                [!provide]                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.decLock   0x00800110        0x1 main.o
-                0x00800110                decLock
- .bss.incLock   0x00800111        0x1 main.o
-                0x00800111                incLock
- .bss.currentDisplay
-                0x00800112        0x1 main.o
-                0x00800112                currentDisplay
- .bss.displayLS
-                0x00800113        0x1 main.o
-                0x00800113                displayLS
- .bss.displayMS
-                0x00800114        0x1 main.o
-                0x00800114                displayMS
- .bss.adcValue  0x00800115        0x1 main.o
-                0x00800115                adcValue
- .bss.contador  0x00800116        0x1 main.o
-                0x00800116                contador
  *(COMMON)
-                0x00800117                PROVIDE (__bss_end, .)
-                0x0000028a                __data_load_start = LOADADDR (.data)
-                0x0000029a                __data_load_end = (__data_load_start + SIZEOF (.data))
+                [!provide]                PROVIDE (__bss_end, .)
+                0x000000c2                __data_load_start = LOADADDR (.data)
+                0x000000c2                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800117        0x0
+.noinit         0x00800100        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800117                _end = .
+                0x00800100                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -414,6 +345,7 @@ END GROUP
  *(.comment)
  .comment       0x00000000       0x30 main.o
                                  0x31 (size before relaxing)
+ .comment       0x00000030       0x31 PWM/PWM0.o
 
 .note.gnu.avr.deviceinfo
                 0x00000000       0x40
@@ -435,42 +367,50 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x60
+.debug_aranges  0x00000000       0x50
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x60 main.o
+                0x00000000       0x20 main.o
+ .debug_aranges
+                0x00000020       0x30 PWM/PWM0.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x857
+.debug_info     0x00000000      0x851
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_info    0x000005f4      0x263 main.o
+ .debug_info    0x000005f4      0x18f main.o
+ .debug_info    0x00000783       0xce PWM/PWM0.o
 
-.debug_abbrev   0x00000000      0x6b8
+.debug_abbrev   0x00000000      0x74a
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_abbrev  0x000005a2      0x116 main.o
+ .debug_abbrev  0x000005a2      0x118 main.o
+ .debug_abbrev  0x000006ba       0x90 PWM/PWM0.o
 
-.debug_line     0x00000000      0x3ca
+.debug_line     0x00000000      0x39c
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000134      0x296 main.o
+ .debug_line    0x00000134      0x15f main.o
+ .debug_line    0x00000293      0x109 PWM/PWM0.o
 
-.debug_frame    0x00000000      0x108
+.debug_frame    0x00000000       0x68
  *(.debug_frame)
- .debug_frame   0x00000000      0x108 main.o
+ .debug_frame   0x00000000       0x24 main.o
+ .debug_frame   0x00000024       0x44 PWM/PWM0.o
 
-.debug_str      0x00000000      0x425
+.debug_str      0x00000000      0x3f4
  *(.debug_str)
  .debug_str     0x00000000      0x208 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_str     0x00000208      0x21d main.o
-                                0x251 (size before relaxing)
+ .debug_str     0x00000208      0x1d9 main.o
+                                0x20d (size before relaxing)
+ .debug_str     0x000003e1       0x13 PWM/PWM0.o
+                                0x1ba (size before relaxing)
 
-.debug_loc      0x00000000      0x142
+.debug_loc      0x00000000       0x15
  *(.debug_loc)
- .debug_loc     0x00000000      0x142 main.o
+ .debug_loc     0x00000000       0x15 main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -490,11 +430,12 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x50
+.debug_ranges   0x00000000       0x30
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x50 main.o
+ .debug_ranges  0x00000000       0x10 main.o
+ .debug_ranges  0x00000010       0x20 PWM/PWM0.o
 
 .debug_macro
  *(.debug_macro)
-OUTPUT(Prelab4.elf elf32-avr)
+OUTPUT(testpwm.elf elf32-avr)
 LOAD linker stubs
