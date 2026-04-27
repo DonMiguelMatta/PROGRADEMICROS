@@ -4,6 +4,8 @@ d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr
                               D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o (exit)
 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
                               main.o (__do_copy_data)
+d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+                              main.o (__umulhisi3)
 
 Discarded input sections
 
@@ -12,6 +14,11 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
+ .text.Mostrar_Byte_En_LEDs
+                0x00000000       0x2e main.o
+ .text          0x00000000        0x0 USARTLIB/ascii_binario.o
+ .data          0x00000000        0x0 USARTLIB/ascii_binario.o
+ .bss           0x00000000        0x0 USARTLIB/ascii_binario.o
  .text          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
@@ -44,6 +51,20 @@ Discarded input sections
                 0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
  .text.libgcc.fixed
                 0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .data          0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .bss           0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .text.libgcc.div
+                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .text.libgcc   0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
 
 Memory Configuration
 
@@ -62,6 +83,7 @@ Linker script and memory map
 Address of section .data set to 0x800100
 LOAD D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
 LOAD main.o
+LOAD USARTLIB/ascii_binario.o
 START GROUP
 LOAD d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a
 END GROUP
@@ -171,7 +193,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x18c
+.text           0x00000000      0x392
  *(.vectors)
  .vectors       0x00000000       0x68 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -252,28 +274,53 @@ END GROUP
                 0x00000092                __vector_14
                 0x00000092                __vector_10
                 0x00000092                __vector_16
+                0x00000092                __vector_18
                 0x00000092                __vector_20
                 0x00000096                . = ALIGN (0x2)
  *(.text.*)
- .text.initUART
-                0x00000096       0x2a main.o
-                0x00000096                initUART
- .text.writeChar
-                0x000000c0        0xe main.o
-                0x000000c0                writeChar
- .text.writeString
-                0x000000ce       0x26 main.o
-                0x000000ce                writeString
- .text.main     0x000000f4       0x36 main.o
-                0x000000f4                main
- .text.__vector_18
-                0x0000012a       0x5e main.o
-                0x0000012a                __vector_18
-                0x00000188                . = ALIGN (0x2)
+ .text.USART_Init
+                0x00000096       0x1c main.o
+                0x00000096                USART_Init
+ .text.USART_Transmit
+                0x000000b2        0xe main.o
+                0x000000b2                USART_Transmit
+ .text.USART_SendString
+                0x000000c0       0x1a main.o
+                0x000000c0                USART_SendString
+ .text.USART_Receive
+                0x000000da        0xe main.o
+                0x000000da                USART_Receive
+ .text.ADC_Init
+                0x000000e8        0xe main.o
+                0x000000e8                ADC_Init
+ .text.ADC_Read
+                0x000000f6       0x2e main.o
+                0x000000f6                ADC_Read
+ .text.Enviar_Menu
+                0x00000124       0x22 main.o
+                0x00000124                Enviar_Menu
+ .text.Enviar_Numero
+                0x00000146       0xe8 main.o
+                0x00000146                Enviar_Numero
+ .text.main     0x0000022e       0xdc main.o
+                0x0000022e                main
+ .text.Delay_ms_simple
+                0x0000030a       0x24 main.o
+                0x0000030a                Delay_ms_simple
+ .text.ASCII_a_Binario
+                0x0000032e        0x2 USARTLIB/ascii_binario.o
+                0x0000032e                ASCII_a_Binario
+ .text.ASCII_En_LEDs_D2_D9
+                0x00000330       0x40 USARTLIB/ascii_binario.o
+                0x00000330                ASCII_En_LEDs_D2_D9
+ .text.libgcc.mul
+                0x00000370       0x1e d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+                0x00000370                __umulhisi3
+                0x0000038e                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000188        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000188                _exit
-                0x00000188                exit
+ .fini9         0x0000038e        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x0000038e                _exit
+                0x0000038e                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -292,11 +339,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000188        0x4 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x0000038e        0x4 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000018c                _etext = .
+                0x00000392                _etext = .
 
-.data           0x00800100        0xc load address 0x0000018c
+.data           0x00800100       0xc6 load address 0x00000392
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -304,27 +351,27 @@ END GROUP
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00800100        0xb main.o
+                0x00800100       0xc6 main.o
+                                 0xce (size before relaxing)
  *(.gnu.linkonce.r*)
-                0x0080010c                . = ALIGN (0x2)
- *fill*         0x0080010b        0x1 
-                0x0080010c                _edata = .
-                0x0080010c                PROVIDE (__data_end, .)
+                0x008001c6                . = ALIGN (0x2)
+                0x008001c6                _edata = .
+                0x008001c6                PROVIDE (__data_end, .)
 
-.bss            0x0080010c        0x0
+.bss            0x008001c6        0x0
                 [!provide]                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
                 [!provide]                PROVIDE (__bss_end, .)
-                0x0000018c                __data_load_start = LOADADDR (.data)
-                0x00000198                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000392                __data_load_start = LOADADDR (.data)
+                0x00000458                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0080010c        0x0
+.noinit         0x008001c6        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x0080010c                _end = .
+                0x008001c6                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -368,6 +415,7 @@ END GROUP
  *(.comment)
  .comment       0x00000000       0x30 main.o
                                  0x31 (size before relaxing)
+ .comment       0x00000030       0x31 USARTLIB/ascii_binario.o
 
 .note.gnu.avr.deviceinfo
                 0x00000000       0x40
@@ -389,42 +437,51 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x40
+.debug_aranges  0x00000000       0x98
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x40 main.o
+                0x00000000       0x70 main.o
+ .debug_aranges
+                0x00000070       0x28 USARTLIB/ascii_binario.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x7c7
+.debug_info     0x00000000      0xc64
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_info    0x000005f4      0x1d3 main.o
+ .debug_info    0x000005f4      0x54e main.o
+ .debug_info    0x00000b42      0x122 USARTLIB/ascii_binario.o
 
-.debug_abbrev   0x00000000      0x6d9
+.debug_abbrev   0x00000000      0x825
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_abbrev  0x000005a2      0x137 main.o
+ .debug_abbrev  0x000005a2      0x199 main.o
+ .debug_abbrev  0x0000073b       0xea USARTLIB/ascii_binario.o
 
-.debug_line     0x00000000      0x2e1
+.debug_line     0x00000000      0x5e9
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000134      0x1ad main.o
+ .debug_line    0x00000134      0x3b4 main.o
+ .debug_line    0x000004e8      0x101 USARTLIB/ascii_binario.o
 
-.debug_frame    0x00000000       0xc0
+.debug_frame    0x00000000      0x124
  *(.debug_frame)
- .debug_frame   0x00000000       0xc0 main.o
+ .debug_frame   0x00000000       0xe8 main.o
+ .debug_frame   0x000000e8       0x3c USARTLIB/ascii_binario.o
 
-.debug_str      0x00000000      0x3b0
+.debug_str      0x00000000      0x4a4
  *(.debug_str)
  .debug_str     0x00000000      0x208 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_str     0x00000208      0x1a8 main.o
+ .debug_str     0x00000208      0x277 main.o
+                                0x2b0 (size before relaxing)
+ .debug_str     0x0000047f       0x25 USARTLIB/ascii_binario.o
                                 0x1e1 (size before relaxing)
 
-.debug_loc      0x00000000      0x17c
+.debug_loc      0x00000000      0x309
  *(.debug_loc)
- .debug_loc     0x00000000      0x17c main.o
+ .debug_loc     0x00000000      0x2a8 main.o
+ .debug_loc     0x000002a8       0x61 USARTLIB/ascii_binario.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -444,11 +501,12 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x30
+.debug_ranges   0x00000000       0x78
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x30 main.o
+ .debug_ranges  0x00000000       0x60 main.o
+ .debug_ranges  0x00000060       0x18 USARTLIB/ascii_binario.o
 
 .debug_macro
  *(.debug_macro)
-OUTPUT(UART_TEST.elf elf32-avr)
+OUTPUT(USARTLAB6.elf elf32-avr)
 LOAD linker stubs

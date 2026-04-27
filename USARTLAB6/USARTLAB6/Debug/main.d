@@ -10,11 +10,7 @@ main.d main.o: .././main.c \
  d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
- d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
- d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
- d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
- d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
- .././UARTLIB/UART.h
+ .././USARTLIB/ascii_binario.h
 
 d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -38,12 +34,4 @@ d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\
 
 d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
 
-d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
-
-d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h:
-
-d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h:
-
-d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
-
-.././UARTLIB/UART.h:
+.././USARTLIB/ascii_binario.h:

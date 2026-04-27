@@ -33,13 +33,13 @@ LINKER_SCRIPT_DEP:=
 
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
-../UARTLIB
+../UARTLIBR
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../main.c \
-../UARTLIB/UART.c
+../UARTLIBR/UARTLIBR.c
 
 
 PREPROCESSING_SRCS += 
@@ -50,23 +50,23 @@ ASM_SRCS +=
 
 OBJS +=  \
 main.o \
-UARTLIB/UART.o
+UARTLIBR/UARTLIBR.o
 
 OBJS_AS_ARGS +=  \
 main.o \
-UARTLIB/UART.o
+UARTLIBR/UARTLIBR.o
 
 C_DEPS +=  \
 main.d \
-UARTLIB/UART.d
+UARTLIBR/UARTLIBR.d
 
 C_DEPS_AS_ARGS +=  \
 main.d \
-UARTLIB/UART.d
+UARTLIBR/UARTLIBR.d
 
-OUTPUT_FILE_PATH +=UART_TEST.elf
+OUTPUT_FILE_PATH +=UARTEJEMPLO2NOSALEAYUDA.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=UART_TEST.elf
+OUTPUT_FILE_PATH_AS_ARGS +=UARTEJEMPLO2NOSALEAYUDA.elf
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -85,7 +85,7 @@ LINKER_SCRIPT_DEP+=
 	@echo Finished building: $<
 	
 
-UARTLIB/UART.o: ../UARTLIB/UART.c
+UARTLIBR/UARTLIBR.o: ../UARTLIBR/UARTLIBR.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -118,13 +118,13 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR/GNU Linker : 5.4.0
-	$(QUOTE)D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="UART_TEST.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mmcu=atmega328p -B "D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p"  
+	$(QUOTE)D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="UARTEJEMPLO2NOSALEAYUDA.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mmcu=atmega328p -B "D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p"  
 	@echo Finished building target: $@
-	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "UART_TEST.elf" "UART_TEST.hex"
-	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "UART_TEST.elf" "UART_TEST.eep" || exit 0
-	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "UART_TEST.elf" > "UART_TEST.lss"
-	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "UART_TEST.elf" "UART_TEST.srec"
-	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "UART_TEST.elf"
+	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "UARTEJEMPLO2NOSALEAYUDA.elf" "UARTEJEMPLO2NOSALEAYUDA.hex"
+	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "UARTEJEMPLO2NOSALEAYUDA.elf" "UARTEJEMPLO2NOSALEAYUDA.eep" || exit 0
+	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "UARTEJEMPLO2NOSALEAYUDA.elf" > "UARTEJEMPLO2NOSALEAYUDA.lss"
+	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "UARTEJEMPLO2NOSALEAYUDA.elf" "UARTEJEMPLO2NOSALEAYUDA.srec"
+	"D:\migue\Archivos\Archivos de prgroama (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "UARTEJEMPLO2NOSALEAYUDA.elf"
 	
 	
 
@@ -136,5 +136,5 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	rm -rf "UART_TEST.elf" "UART_TEST.a" "UART_TEST.hex" "UART_TEST.lss" "UART_TEST.eep" "UART_TEST.map" "UART_TEST.srec" "UART_TEST.usersignatures"
+	rm -rf "UARTEJEMPLO2NOSALEAYUDA.elf" "UARTEJEMPLO2NOSALEAYUDA.a" "UARTEJEMPLO2NOSALEAYUDA.hex" "UARTEJEMPLO2NOSALEAYUDA.lss" "UARTEJEMPLO2NOSALEAYUDA.eep" "UARTEJEMPLO2NOSALEAYUDA.map" "UARTEJEMPLO2NOSALEAYUDA.srec" "UARTEJEMPLO2NOSALEAYUDA.usersignatures"
 	
