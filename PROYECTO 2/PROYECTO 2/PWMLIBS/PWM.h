@@ -12,12 +12,12 @@
 #define PWM_H_
 
 /****************************************/
-// Encabezado (Libraries)
+// Librerias
 #include <avr/io.h>
 #include <stdint.h>
 
 /****************************************/
-// Function prototypes
+// Prototipos
 
 typedef enum
 {

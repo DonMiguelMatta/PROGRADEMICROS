@@ -4,12 +4,11 @@
  * Created:
  * Author:
  * Description:
- * Brazo robotico con 4 servos, 4 potenciometros y memoria EEPROM.
- * Control por modo manual y reproduccion desde EEPROM.
+ * Brazo robotico con 4 servos, 4 potenciometros y comunicacion UART.
  */
 
 /****************************************/
-// Encabezado (Libraries)
+// Librerias
 
 #define F_CPU 16000000UL
 
@@ -17,383 +16,374 @@
 #include <avr/interrupt.h>
 #include <stdint.h>
 
-#include "EEPROM/EEPROM.h"
 #include "ADCLIBS/ADC.h"
 #include "PWMLIBS/PWM.h"
-#include "TIMERSLIBS/TIMER.h"
+#include "EEPROM/EEPROM.h"
 #include "UARTLIBS/UART.h"
 
 /****************************************/
 // Constantes
 
-#define SERVOS_USADOS        4
-#define POSICIONES_TOTAL     3
+#define BUTTON_TIME_MS   50
+#define TELEMETRY_TIME_MS 2000
 
-#define EEPROM_BASE          0
+#define LED_PIN          PD2
+#define BTN_SAVE_PIN     PB3
+#define BTN_PLAY_PIN     PB4
 
-#define MODO_MANUAL          0
-#define MODO_EEPROM          1
-
-#define ANTIREBOTE_TICKS     5
-
-#define BOTON_DDR            DDRB
-#define BOTON_PORT           PORTB
-#define BOTON_PIN            PINB
-#define PIN_GUARDAR          PB3    // D11
-#define PIN_REPRODUCIR       PB4    // D12
-
-#define LED_DDR              DDRD
-#define LED_PORT             PORTD
-#define PIN_LED              PD2    // D2
-
-#define LED_GUARDAR_TICKS    50
-#define LED_BLINK_ON_TICKS   20
-#define LED_BLINK_OFF_TICKS  20
-#define LED_BLINKS_TOTAL     2
+#define EEPROM_VALID     0
+#define EEPROM_SERVO_D3  1
+#define EEPROM_SERVO_D5  2
+#define EEPROM_SERVO_D6  3
+#define EEPROM_SERVO_D9  4
+#define EEPROM_MARKER    0xA5
 
 /****************************************/
-// Estados internos del LED
+// Prototipos
 
-typedef enum
-{
-	LED_IDLE = 0,
-	LED_ON_FIJO,
-	LED_BLINK_ON,
-	LED_BLINK_OFF
-} EstadoLED;
+void setup(void);
+void initPorts(void);
+void initTimer0(void);
+void sendMenuUART(void);
+void checkUART(void);
+void processCommand(char command);
+void checkButtons(void);
+void savePosition(void);
+uint8_t playPosition(void);
+void setManualMode(void);
+void updatePotentiometers(void);
+void updateManualServos(void);
+void sendPotTelemetry(void);
+uint32_t getTicks1ms(void);
 
 /****************************************/
 // Variables globales
 
-static servo_t servoD3;
-static servo_t servoD5;
-static servo_t servoD6;
-static servo_t servoD9;
+servo_t servoD3;
+servo_t servoD5;
+servo_t servoD6;
+servo_t servoD9;
 
-static servo_t *servos[SERVOS_USADOS];
+volatile uint32_t ticks1ms = 0;
 
-volatile uint8_t ticks10ms = 0;
+uint32_t lastButtonTime = 0;
+uint32_t lastTelemetryTime = 0;
+uint8_t manualMode = 1;
 
-static uint8_t modoActual = MODO_MANUAL;
-
-static uint8_t indiceGuardar = 0;
-static uint8_t indiceReproducir = 0;
-
-static EstadoLED estadoLED = LED_IDLE;
-static uint8_t tickInicioLED = 0;
-static uint8_t contParpadeos = 0;
+uint16_t adcPotA0 = 0;
+uint16_t adcPotA1 = 0;
+uint16_t adcPotA2 = 0;
+uint16_t adcPotA3 = 0;
 
 /****************************************/
-// Function prototypes
-
-static void inicializarHardware(void);
-static void inicializarBotones(void);
-static void inicializarLED(void);
-
-static void actualizarServosManual(void);
-static void guardarPosicion(uint8_t idx);
-static void cargarPosicion(uint8_t idx);
-
-static uint8_t botonPresionado(uint8_t pin, uint8_t *estadoAnt, uint8_t *ultimoTick);
-
-static void iniciarLEDGuardar(void);
-static void iniciarLEDReproducir(void);
-static void gestionarLED(void);
-
-static void imprimirNumero(uint8_t n);
-
-/****************************************/
-// Main Function
+// Funcion principal
 
 int main(void)
 {
-	inicializarHardware();
+	uint32_t currentTime = 0;
+
+	cli();
+
+	setup();
+
+	sei();
+
+	sendMenuUART();
 
 	while (1)
 	{
-		if (modoActual == MODO_MANUAL)
+		// Leer potenciometros
+		updatePotentiometers();
+		
+		if (manualMode)
 		{
-			actualizarServosManual();
+			// Mover servos en modo manual
+			updateManualServos();
 		}
 
-		/****************************************/
-		// Boton GUARDAR - D11 / PB3
-
+		// Leer botones fisicos
+		checkButtons();
+		
+		// Leer comandos desde terminal
+		checkUART();
+		
+		currentTime = getTicks1ms();
+		
+		if ((uint32_t)(currentTime - lastTelemetryTime) >= TELEMETRY_TIME_MS)
 		{
-			static uint8_t estAnt = 1;
-			static uint8_t ultTick = 0;
-
-			if (botonPresionado(PIN_GUARDAR, &estAnt, &ultTick))
-			{
-				guardarPosicion(indiceGuardar);
-
-				writeString("Posicion ");
-				imprimirNumero((uint8_t)(indiceGuardar + 1));
-				writeString(" guardada");
-				writeNewLine();
-
-				indiceGuardar++;
-
-				if (indiceGuardar >= POSICIONES_TOTAL)
-				{
-					indiceGuardar = 0;
-				}
-
-				iniciarLEDGuardar();
-
-				modoActual = MODO_MANUAL;
-			}
+			lastTelemetryTime = currentTime;
+			// Enviar valores a Adafruit por UART
+			sendPotTelemetry();
 		}
-
-		/****************************************/
-		// Boton REPRODUCIR - D12 / PB4
-
-		{
-			static uint8_t estAnt = 1;
-			static uint8_t ultTick = 0;
-
-			if (botonPresionado(PIN_REPRODUCIR, &estAnt, &ultTick))
-			{
-				cargarPosicion(indiceReproducir);
-
-				writeString("Posicion ");
-				imprimirNumero((uint8_t)(indiceReproducir + 1));
-				writeString(" reproducida");
-				writeNewLine();
-
-				indiceReproducir++;
-
-				if (indiceReproducir >= POSICIONES_TOTAL)
-				{
-					indiceReproducir = 0;
-				}
-
-				iniciarLEDReproducir();
-
-				modoActual = MODO_EEPROM;
-			}
-		}
-
-		gestionarLED();
 	}
 }
 
 /****************************************/
-// NON-Interrupt subroutines
+// Funciones
 
-static void inicializarHardware(void)
+void setup(void)
 {
-	cli();
+	// Preparar perifericos del sistema
+	initPorts();
 
 	initADC();
+	
 	initEEPROM();
+
 	initUART();
 
-	inicializarBotones();
-	inicializarLED();
+	initTimer0();
 
-	/*
-		Timer1 se usa exclusivamente dentro de la libreria PWM
-		para generar los pulsos de los servos.
-	*/
 	Servo_init();
-
-	servos[0] = &servoD3;
-	servos[1] = &servoD5;
-	servos[2] = &servoD6;
-	servos[3] = &servoD9;
 
 	Servo_attach(&servoD3, SERVO_D3);
 	Servo_attach(&servoD5, SERVO_D5);
 	Servo_attach(&servoD6, SERVO_D6);
 	Servo_attach(&servoD9, SERVO_D9);
+}
 
-	/*
-		Timer0 para base de tiempo de 10 ms.
-		Se usa para debounce y LED.
-	*/
-	initTimer0_CTC(timer0_usToTicks(10000UL, TIMER_PRESCALER_1024), TIMER_PRESCALER_1024);
+void initPorts(void)
+{
+	// Configurar TX
+	DDRD |= (1 << PD1);
+
+	// Configurar RX
+	DDRD &= ~(1 << PD0);
+	
+	// Configurar LED indicador
+	DDRD |= (1 << LED_PIN);
+	PORTD &= ~(1 << LED_PIN);
+	
+	// Configurar botones con pull-up interno
+	DDRB &= ~((1 << BTN_SAVE_PIN) | (1 << BTN_PLAY_PIN));
+	PORTB |= (1 << BTN_SAVE_PIN) | (1 << BTN_PLAY_PIN);
+}
+
+void initTimer0(void)
+{
+	// Configurar Timer0 para contar milisegundos
+	TCCR0A = 0;
+	TCCR0B = 0;
+	TCNT0 = 0;
+
+	TCCR0A |= (1 << WGM01);
+
+	OCR0A = 249;
+
 	TIMSK0 |= (1 << OCIE0A);
 
-	sei();
+	TCCR0B |= (1 << CS01) | (1 << CS00);
+}
 
-	writeString("Sistema iniciado");
+void sendMenuUART(void)
+{
+	writeNewLine();
+	writeString("Proyecto 2");
+	writeNewLine();
+
+	writeString("1: modo manual con potenciometros");
+	writeNewLine();
+
+	writeString("2: guardar posicion actual");
+	writeNewLine();
+
+	writeString("3: reproducir posicion guardada");
+	writeNewLine();
 	writeNewLine();
 }
 
-static void inicializarBotones(void)
+void checkUART(void)
 {
-	/*
-		PB3 y PB4 como entradas con pull-up interno.
-		Boton presionado = 0.
-		Boton suelto = 1.
-	*/
-	BOTON_DDR &= ~((1 << PIN_GUARDAR) | (1 << PIN_REPRODUCIR));
-	BOTON_PORT |= (1 << PIN_GUARDAR) | (1 << PIN_REPRODUCIR);
-}
+	char dato = 0;
 
-static void inicializarLED(void)
-{
-	LED_DDR |= (1 << PIN_LED);
-	LED_PORT &= ~(1 << PIN_LED);
-}
-
-static void actualizarServosManual(void)
-{
-	uint8_t i;
-	uint16_t valorADC;
-
-	for (i = 0; i < SERVOS_USADOS; i++)
+	if (readCharIfAvailable(&dato))
 	{
-		valorADC = readADC(i);
-		Servo_writeADC(servos[i], valorADC);
+		if ((dato == '\r') || (dato == '\n'))
+		{
+			return;
+		}
+
+		writeString("Dato recibido: ");
+		writeChar(dato);
+		writeNewLine();
+
+		processCommand(dato);
 	}
 }
 
-static void guardarPosicion(uint8_t idx)
+void processCommand(char command)
 {
-	uint16_t dir;
-	uint8_t datos[SERVOS_USADOS];
-	uint8_t i;
+	if (command == '1')
+	{
+		setManualMode();
+		writeString("Modo manual activo");
+		writeNewLine();
+	}
+	else if (command == '2')
+	{
+		savePosition();
+		writeString("Posicion guardada en EEPROM");
+		writeNewLine();
+	}
+	else if (command == '3')
+	{
+		if (playPosition())
+		{
+			writeString("Posicion EEPROM reproducida");
+			writeNewLine();
+		}
+		else
+		{
+			writeString("No hay posicion guardada");
+			writeNewLine();
+		}
+	}
+	else
+	{
+		writeString("Comando no valido");
+		writeNewLine();
+		sendMenuUART();
+	}
+}
 
-	if (idx >= POSICIONES_TOTAL)
+void checkButtons(void)
+{
+	static uint8_t lastSaveState = 1;
+	static uint8_t lastPlayState = 1;
+	uint8_t saveState = 0;
+	uint8_t playState = 0;
+	uint32_t currentTime = 0;
+	
+	currentTime = getTicks1ms();
+	
+	if ((uint32_t)(currentTime - lastButtonTime) < BUTTON_TIME_MS)
 	{
 		return;
 	}
-
-	dir = EEPROM_BASE + ((uint16_t)idx * SERVOS_USADOS);
-
-	for (i = 0; i < SERVOS_USADOS; i++)
+	
+	saveState = (PINB & (1 << BTN_SAVE_PIN)) ? 1 : 0;
+	playState = (PINB & (1 << BTN_PLAY_PIN)) ? 1 : 0;
+	
+	// Guardar posicion con D11
+	if ((lastSaveState == 1) && (saveState == 0))
 	{
-		datos[i] = Servo_getAngle(servos[i]);
+		lastButtonTime = currentTime;
+		savePosition();
+		writeString("D11: posicion guardada en EEPROM");
+		writeNewLine();
 	}
-
-	writeEEPROM_Block(dir, datos, SERVOS_USADOS);
-}
-
-static void cargarPosicion(uint8_t idx)
-{
-	uint16_t dir;
-	uint8_t datos[SERVOS_USADOS];
-	uint8_t i;
-
-	if (idx >= POSICIONES_TOTAL)
+	
+	// Reproducir posicion con D12
+	if ((lastPlayState == 1) && (playState == 0))
 	{
-		return;
-	}
-
-	dir = EEPROM_BASE + ((uint16_t)idx * SERVOS_USADOS);
-
-	readEEPROM_Block(dir, datos, SERVOS_USADOS);
-
-	for (i = 0; i < SERVOS_USADOS; i++)
-	{
-		if (datos[i] > 180)
+		lastButtonTime = currentTime;
+		
+		if (playPosition())
 		{
-			datos[i] = 90;
+			writeString("D12: posicion EEPROM reproducida");
+			writeNewLine();
 		}
-
-		Servo_writeAngle(servos[i], datos[i]);
-	}
-}
-
-static uint8_t botonPresionado(uint8_t pin, uint8_t *estadoAnt, uint8_t *ultimoTick)
-{
-	uint8_t estadoActual;
-	uint8_t tickActual;
-	uint8_t evento = 0;
-
-	estadoActual = (BOTON_PIN & (1 << pin)) ? 1 : 0;
-	tickActual = ticks10ms;
-
-	if ((*estadoAnt == 1) && (estadoActual == 0))
-	{
-		if ((uint8_t)(tickActual - *ultimoTick) >= ANTIREBOTE_TICKS)
+		else
 		{
-			evento = 1;
-			*ultimoTick = tickActual;
+			writeString("D12: no hay posicion guardada");
+			writeNewLine();
 		}
 	}
-
-	*estadoAnt = estadoActual;
-
-	return evento;
+	
+	lastSaveState = saveState;
+	lastPlayState = playState;
 }
 
-static void iniciarLEDGuardar(void)
+void savePosition(void)
 {
-	LED_PORT |= (1 << PIN_LED);
-	estadoLED = LED_ON_FIJO;
-	tickInicioLED = ticks10ms;
+	// Guardar posicion actual en EEPROM
+	updateEEPROM(EEPROM_VALID, EEPROM_MARKER);
+	updateEEPROM(EEPROM_SERVO_D3, Servo_getAngle(&servoD9));
+	updateEEPROM(EEPROM_SERVO_D5, Servo_getAngle(&servoD6));
+	updateEEPROM(EEPROM_SERVO_D6, Servo_getAngle(&servoD5));
+	updateEEPROM(EEPROM_SERVO_D9, Servo_getAngle(&servoD3));
+	
+	PORTD |= (1 << LED_PIN);
 }
 
-static void iniciarLEDReproducir(void)
+uint8_t playPosition(void)
 {
-	LED_PORT |= (1 << PIN_LED);
-	estadoLED = LED_BLINK_ON;
-	tickInicioLED = ticks10ms;
-	contParpadeos = 0;
-}
-
-static void gestionarLED(void)
-{
-	uint8_t tickActual;
-	uint8_t ticksTransc;
-
-	tickActual = ticks10ms;
-	ticksTransc = (uint8_t)(tickActual - tickInicioLED);
-
-	switch (estadoLED)
+	// Verificar si ya hay una posicion guardada
+	if (readEEPROM(EEPROM_VALID) != EEPROM_MARKER)
 	{
-		case LED_ON_FIJO:
-			if (ticksTransc >= LED_GUARDAR_TICKS)
-			{
-				LED_PORT &= ~(1 << PIN_LED);
-				estadoLED = LED_IDLE;
-			}
-			break;
-
-		case LED_BLINK_ON:
-			if (ticksTransc >= LED_BLINK_ON_TICKS)
-			{
-				LED_PORT &= ~(1 << PIN_LED);
-				estadoLED = LED_BLINK_OFF;
-				tickInicioLED = tickActual;
-				contParpadeos++;
-			}
-			break;
-
-		case LED_BLINK_OFF:
-			if (ticksTransc >= LED_BLINK_OFF_TICKS)
-			{
-				if (contParpadeos < LED_BLINKS_TOTAL)
-				{
-					LED_PORT |= (1 << PIN_LED);
-					estadoLED = LED_BLINK_ON;
-					tickInicioLED = tickActual;
-				}
-				else
-				{
-					estadoLED = LED_IDLE;
-				}
-			}
-			break;
-
-		case LED_IDLE:
-		default:
-			break;
+		return 0;
 	}
+	
+	manualMode = 0;
+	
+	Servo_writeAngle(&servoD9, readEEPROM(EEPROM_SERVO_D3));
+	Servo_writeAngle(&servoD6, readEEPROM(EEPROM_SERVO_D5));
+	Servo_writeAngle(&servoD5, readEEPROM(EEPROM_SERVO_D6));
+	Servo_writeAngle(&servoD3, readEEPROM(EEPROM_SERVO_D9));
+	
+	PORTD &= ~(1 << LED_PIN);
+	
+	return 1;
 }
 
-static void imprimirNumero(uint8_t n)
+void setManualMode(void)
 {
-	writeChar((char)('0' + (n % 10)));
+	// Regresar al control con potenciometros
+	manualMode = 1;
+	PORTD |= (1 << LED_PIN);
+}
+
+void updatePotentiometers(void)
+{
+	// Leer entradas analogicas
+	adcPotA0 = readADC(0);
+	adcPotA1 = readADC(1);
+	adcPotA2 = readADC(2);
+	adcPotA3 = readADC(3);
+}
+
+void updateManualServos(void)
+{
+	// Aplicar mapeo fisico de potenciometros a servos
+	Servo_writeADC(&servoD9, adcPotA0);
+	Servo_writeADC(&servoD6, adcPotA1);
+	Servo_writeADC(&servoD5, adcPotA2);
+	Servo_writeADC(&servoD3, adcPotA3);
+}
+
+void sendPotTelemetry(void)
+{
+	// Mandar datos para el dashboard
+	writeString("P:");
+	writeNumber(adcPotA0);
+	writeChar(',');
+	writeNumber(adcPotA1);
+	writeChar(',');
+	writeNumber(adcPotA2);
+	writeChar(',');
+	writeNumber(adcPotA3);
+	writeNewLine();
+}
+
+uint32_t getTicks1ms(void)
+{
+	uint8_t sreg = 0;
+	uint32_t currentTicks = 0;
+	
+	sreg = SREG;
+	cli();
+	
+	currentTicks = ticks1ms;
+	
+	SREG = sreg;
+	
+	return currentTicks;
 }
 
 /****************************************/
-// Interrupt routines
+// Interrupciones
 
 ISR(TIMER0_COMPA_vect)
 {
-	ticks10ms++;
+	ticks1ms++;
 }

@@ -10,12 +10,12 @@
 #define ADC_H_
 
 /****************************************/
-// Libraries
+// Librerias
 #include <avr/io.h>
 #include <stdint.h>
 
 /****************************************/
-// Function prototypes
+// Prototipos
 void initADC(void);
 uint16_t readADC(uint8_t canal);
 uint8_t readADC_8bits(uint8_t canal);

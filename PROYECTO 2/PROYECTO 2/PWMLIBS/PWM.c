@@ -8,7 +8,7 @@
  */
 
 /****************************************/
-// Encabezado (Libraries)
+// Librerias
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
@@ -21,25 +21,29 @@
 #define SERVO_MAX_DEVICES     4
 #define SERVO_TICK_US         10
 #define SERVO_PERIOD_TICKS    2000
+#define SERVO_TIMER_COUNTS    20
 
-#define SERVO_MIN_US          500
+#define SERVO_MIN_US          1000
 #define SERVO_CENTER_US       1500
-#define SERVO_MAX_US          3000
+#define SERVO_MAX_US          2000
 
 /****************************************/
 // Variables globales internas
 
 static servo_t *servoDevices[SERVO_MAX_DEVICES];
 static volatile unsigned char servoTotal = 0;
-static volatile unsigned int servoCounter = 0;
+static volatile unsigned int servoElapsedTicks = 0;
+static volatile unsigned int servoNextEventTicks = 0;
 
 /****************************************/
-// Function prototypes internos
+// Prototipos internos
 
 static void Servo_ISRHandler(void);
+static void Servo_setNextCompare(unsigned int intervalTicks);
+static unsigned int Servo_findNextEvent(unsigned int elapsedTicks);
 
 /****************************************/
-// NON-Interrupt subroutines
+// Funciones
 
 void Servo_init(void)
 {
@@ -51,40 +55,24 @@ void Servo_init(void)
 	}
 
 	servoTotal = 0;
-	servoCounter = 0;
+	servoElapsedTicks = 0;
+	servoNextEventTicks = SERVO_PERIOD_TICKS;
 
-	/*
-		Limpiar Timer1.
-	*/
+	// Preparar Timer1 desde cero
 	TCCR1A = 0;
 	TCCR1B = 0;
 	TCNT1 = 0;
 
-	/*
-		Timer1 en modo CTC.
-	*/
+	// Usar Timer1 en modo CTC
 	TCCR1B |= (1 << WGM12);
 
-	/*
-		Comparacion cada 10 us.
+	// Calcular eventos de servo con pasos de 10 us
+	Servo_setNextCompare(SERVO_PERIOD_TICKS);
 
-		F_CPU = 16 MHz
-		Prescaler = 8
-		Tiempo por cuenta = 0.5 us
-
-		OCR1A = 19
-		20 cuentas * 0.5 us = 10 us
-	*/
-	OCR1A = 19;
-
-	/*
-		Prescaler 8.
-	*/
+	// Arrancar Timer1 con prescaler 8
 	TCCR1B |= (1 << CS11);
 
-	/*
-		Habilitar interrupcion por comparacion A.
-	*/
+	// Habilitar interrupcion del Timer1
 	TIMSK1 |= (1 << OCIE1A);
 }
 
@@ -98,36 +86,28 @@ void Servo_attach(servo_t *servo, servo_channel_t channel)
 	switch (channel)
 	{
 		case SERVO_D3:
-			/*
-				D3 = PD3
-			*/
+			// Usar pin D3
 			servo->ddr = &DDRD;
 			servo->port = &PORTD;
 			servo->pin = PD3;
 			break;
 
 		case SERVO_D5:
-			/*
-				D5 = PD5
-			*/
+			// Usar pin D5
 			servo->ddr = &DDRD;
 			servo->port = &PORTD;
 			servo->pin = PD5;
 			break;
 
 		case SERVO_D6:
-			/*
-				D6 = PD6
-			*/
+			// Usar pin D6
 			servo->ddr = &DDRD;
 			servo->port = &PORTD;
 			servo->pin = PD6;
 			break;
 
 		case SERVO_D9:
-			/*
-				D9 = PB1
-			*/
+			// Usar pin D9
 			servo->ddr = &DDRB;
 			servo->port = &PORTB;
 			servo->pin = PB1;
@@ -137,24 +117,16 @@ void Servo_attach(servo_t *servo, servo_channel_t channel)
 			return;
 	}
 
-	/*
-		Pin como salida.
-	*/
+	// Configurar pin del servo
 	*(servo->ddr) |= (1 << servo->pin);
 
-	/*
-		Estado inicial bajo.
-	*/
+	// Dejar salida apagada al inicio
 	*(servo->port) &= ~(1 << servo->pin);
 
-	/*
-		Posicion inicial al centro.
-	*/
+	// Colocar servo al centro
 	servo->pulseTicks = SERVO_CENTER_US / SERVO_TICK_US;
 
-	/*
-		Guardar servo en arreglo interno.
-	*/
+	// Agregar servo a la lista de control
 	if (servoTotal < SERVO_MAX_DEVICES)
 	{
 		servoDevices[servoTotal] = servo;
@@ -181,9 +153,7 @@ void Servo_writeMicroseconds(servo_t *servo, unsigned int pulseMicroseconds)
 		pulseMicroseconds = SERVO_MAX_US;
 	}
 
-	/*
-		Proteger escritura porque pulseTicks se usa dentro de la interrupcion.
-	*/
+	// Actualizar pulso sin chocar con la interrupcion
 	sreg = SREG;
 	cli();
 
@@ -199,9 +169,7 @@ unsigned int Servo_mapADC(unsigned int adcValue)
 		adcValue = 1023;
 	}
 
-	/*
-		Mapear ADC 0-1023 a pulso de 500 us a 3000 us.
-	*/
+	// Convertir lectura ADC al rango del servo
 	return (SERVO_MIN_US + ((unsigned long)adcValue * (SERVO_MAX_US - SERVO_MIN_US)) / 1023UL);
 }
 
@@ -217,9 +185,7 @@ unsigned int Servo_mapAngle(unsigned char angle)
 		angle = 180;
 	}
 
-	/*
-		Mapear angulo 0-180 a pulso de 500 us a 3000 us.
-	*/
+	// Convertir angulo al rango del servo
 	return (SERVO_MIN_US + ((unsigned long)angle * (SERVO_MAX_US - SERVO_MIN_US)) / 180UL);
 }
 
@@ -256,21 +222,66 @@ unsigned char Servo_getAngle(servo_t *servo)
 }
 
 /****************************************/
-// Funcion interna para generar PWM de servos
+// PWM de servos
+
+static void Servo_setNextCompare(unsigned int intervalTicks)
+{
+	unsigned long timerCounts = 0;
+
+	if (intervalTicks == 0)
+	{
+		intervalTicks = 1;
+	}
+
+	timerCounts = (unsigned long)intervalTicks * SERVO_TIMER_COUNTS;
+
+	if (timerCounts > 65535UL)
+	{
+		timerCounts = 65535UL;
+	}
+
+	OCR1A = (unsigned int)(timerCounts - 1);
+	TCNT1 = 0;
+}
+
+static unsigned int Servo_findNextEvent(unsigned int elapsedTicks)
+{
+	unsigned char i = 0;
+	unsigned int nextEvent = SERVO_PERIOD_TICKS;
+	unsigned int pulseTicks = 0;
+	servo_t *servo = 0;
+
+	for (i = 0; i < servoTotal; i++)
+	{
+		servo = servoDevices[i];
+
+		if (servo != 0)
+		{
+			pulseTicks = servo->pulseTicks;
+
+			if ((pulseTicks > elapsedTicks) && (pulseTicks < nextEvent))
+			{
+				nextEvent = pulseTicks;
+			}
+		}
+	}
+
+	return nextEvent;
+}
 
 static void Servo_ISRHandler(void)
 {
 	unsigned char i = 0;
 	servo_t *servo = 0;
+	unsigned int nextEvent = 0;
+	unsigned int intervalTicks = 0;
 
-	servoCounter++;
+	servoElapsedTicks = servoNextEventTicks;
 
-	/*
-		Inicio de nuevo periodo de 20 ms.
-	*/
-	if (servoCounter >= SERVO_PERIOD_TICKS)
+	// Iniciar nuevo periodo de 20 ms
+	if (servoElapsedTicks >= SERVO_PERIOD_TICKS)
 	{
-		servoCounter = 0;
+		servoElapsedTicks = 0;
 
 		for (i = 0; i < servoTotal; i++)
 		{
@@ -282,26 +293,44 @@ static void Servo_ISRHandler(void)
 			}
 		}
 	}
-
-	/*
-		Apagar cada servo cuando alcanza su ancho de pulso.
-	*/
-	for (i = 0; i < servoTotal; i++)
+	else
 	{
-		servo = servoDevices[i];
-
-		if (servo != 0)
+		// Apagar servos al terminar su pulso
+		for (i = 0; i < servoTotal; i++)
 		{
-			if (servoCounter == servo->pulseTicks)
+			servo = servoDevices[i];
+
+			if (servo != 0)
 			{
-				*(servo->port) &= ~(1 << servo->pin);
+				if (servo->pulseTicks <= servoElapsedTicks)
+				{
+					*(servo->port) &= ~(1 << servo->pin);
+				}
 			}
 		}
 	}
+
+	nextEvent = Servo_findNextEvent(servoElapsedTicks);
+
+	if (nextEvent > SERVO_PERIOD_TICKS)
+	{
+		nextEvent = SERVO_PERIOD_TICKS;
+	}
+
+	servoNextEventTicks = nextEvent;
+	intervalTicks = servoNextEventTicks - servoElapsedTicks;
+
+	if (intervalTicks == 0)
+	{
+		intervalTicks = 1;
+		servoNextEventTicks = servoElapsedTicks + 1;
+	}
+
+	Servo_setNextCompare(intervalTicks);
 }
 
 /****************************************/
-// Interrupt routines
+// Interrupciones
 
 ISR(TIMER1_COMPA_vect)
 {

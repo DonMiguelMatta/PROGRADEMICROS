@@ -10,12 +10,12 @@
 #define EEPROM_H_
 
 /****************************************/
-// Libraries
+// Librerias
 #include <avr/io.h>
 #include <stdint.h>
 
 /****************************************/
-// Function prototypes
+// Prototipos
 
 void initEEPROM(void);
 

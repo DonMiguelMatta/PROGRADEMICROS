@@ -7,43 +7,30 @@
  */
 
 /****************************************/
-// Libraries
+// Librerias
 #include "EEPROM.h"
 #include <avr/interrupt.h>
 
 /****************************************/
-// NON-Interrupt subroutines
+// Funciones
 
 void initEEPROM(void)
 {
-	/*
-		No se necesita configuracion especial para usar EEPROM.
-		Se asegura que la interrupcion de EEPROM quede deshabilitada.
-	*/
+	// Dejar EEPROM sin interrupciones
 	EECR &= ~(1 << EERIE);
 }
 
 uint8_t readEEPROM(uint16_t direccion)
 {
-	/*
-		Esperar si hay una escritura en proceso.
-		Esto no es un delay, solo espera a que el hardware este listo.
-	*/
+	// Esperar si hay una escritura pendiente
 	while (EECR & (1 << EEPE));
 
-	/*
-		Cargar direccion.
-	*/
+	// Cargar direccion de lectura
 	EEAR = direccion;
 
-	/*
-		Iniciar lectura.
-	*/
+	// Leer dato guardado
 	EECR |= (1 << EERE);
 
-	/*
-		Retornar dato leido.
-	*/
 	return EEDR;
 }
 
@@ -51,28 +38,17 @@ void writeEEPROM(uint16_t direccion, uint8_t dato)
 {
 	uint8_t estadoSREG;
 
-	/*
-		Esperar si hay una escritura en proceso.
-	*/
+	// Esperar si la EEPROM sigue ocupada
 	while (EECR & (1 << EEPE));
 
-	/*
-		Cargar direccion y dato.
-	*/
+	// Preparar direccion y dato
 	EEAR = direccion;
 	EEDR = dato;
 
-	/*
-		Modo erase and write.
-	*/
+	// Usar modo borrar y escribir
 	EECR &= ~((1 << EEPM1) | (1 << EEPM0));
 
-	/*
-		La secuencia EEMPE -> EEPE debe hacerse sin interrupciones
-		durante pocos ciclos para que la escritura sea valida.
-
-		Esta libreria NO contiene ISR y NO contiene delays.
-	*/
+	// Proteger la secuencia obligatoria de escritura
 	estadoSREG = SREG;
 	cli();
 
@@ -88,10 +64,7 @@ void updateEEPROM(uint16_t direccion, uint8_t dato)
 
 	datoActual = readEEPROM(direccion);
 
-	/*
-		Solo escribir si el dato cambio.
-		Esto ayuda a cuidar la vida util de la EEPROM.
-	*/
+	// Escribir solo si el dato cambio
 	if (datoActual != dato)
 	{
 		writeEEPROM(direccion, dato);

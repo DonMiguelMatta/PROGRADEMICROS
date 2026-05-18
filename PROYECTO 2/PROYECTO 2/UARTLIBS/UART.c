@@ -3,94 +3,73 @@
  *
  * Created:
  * Author:
- * Description: Libreria general para comunicacion serial UART en ATmega328P
+ * Description:
+ * Libreria para comunicacion USART/UART en ATmega328P.
  */
 
 /****************************************/
-// Libraries
+// Librerias
+
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+
 #include "UART.h"
 
 /****************************************/
-// NON-Interrupt subroutines
+// Funciones
 
-void initUART(void)
+void USART_Init(void)
 {
-	initUART_Baud(UART_BAUD_RATE);
-}
+	// Configurar TX
+	DDRD |= (1 << DDD1);
 
-void initUART_Baud(uint32_t baudrate)
-{
-	uint16_t ubrr;
+	// Configurar RX
+	DDRD &= ~(1 << DDD0);
 
-	/*
-		Calculo del valor para el registro UBRR.
+	// Configurar baudrate a 9600
+	UBRR0H = 0;
+	UBRR0L = 103;
 
-		Para F_CPU = 16 MHz y baudrate = 9600:
-		UBRR = 103 aproximadamente.
-	*/
-	ubrr = (uint16_t)((F_CPU / (16UL * baudrate)) - 1);
+	// Usar modo asincrono
+	UCSR0A = 0x00;
 
-	/*
-		Configurar baudrate.
-	*/
-	UBRR0H = (uint8_t)(ubrr >> 8);
-	UBRR0L = (uint8_t)(ubrr);
-
-	/*
-		Habilitar transmision y recepcion UART.
-
-		RXEN0: habilita recepcion
-		TXEN0: habilita transmision
-	*/
+	// Activar recepcion y transmision
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0);
 
-	/*
-		Formato de trama:
-
-		8 bits de datos
-		1 bit de stop
-		Sin paridad
-	*/
+	// Usar formato 8N1
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 }
 
-void writeChar(char caracter)
+void USART_Transmit(char data)
 {
-	/*
-		Esperar a que el buffer de transmision este libre.
-		No usa interrupciones ni delays.
-	*/
-	while (!(UCSR0A & (1 << UDRE0)));
+	while (!(UCSR0A & (1 << UDRE0)))
+	{
+	}
 
-	/*
-		Enviar caracter.
-	*/
-	UDR0 = caracter;
+	UDR0 = data;
 }
 
-void writeString(char* string)
+void USART_SendString(const char *text)
 {
-	uint8_t i = 0;
-
-	/*
-		Enviar cadena hasta encontrar el caracter nulo '\0'.
-	*/
-	while (string[i] != '\0')
+	while (*text != '\0')
 	{
-		writeChar(string[i]);
-		i++;
+		USART_Transmit(*text);
+		text++;
 	}
 }
 
-uint8_t availableUART(void)
+char USART_Receive(void)
 {
-	/*
-		Verifica si hay un dato recibido disponible.
+	while (!(UCSR0A & (1 << RXC0)))
+	{
+	}
 
-		Retorna:
-		1 si hay dato recibido
-		0 si no hay dato recibido
-	*/
+	return UDR0;
+}
+
+uint8_t USART_Available(void)
+{
 	if (UCSR0A & (1 << RXC0))
 	{
 		return 1;
@@ -101,42 +80,40 @@ uint8_t availableUART(void)
 	}
 }
 
-char readChar(void)
+uint8_t USART_ReadIfAvailable(char *data)
 {
-	/*
-		Lee un caracter recibido.
-
-		Importante:
-		Antes de usar esta funcion, se recomienda verificar
-		availableUART().
-	*/
-
-	if (availableUART())
+	if (data == 0)
 	{
-		return UDR0;
+		return 0;
 	}
-	else
+	
+	if (USART_Available())
 	{
-		return '\0';
+		*data = UDR0;
+		return 1;
 	}
+	
+	return 0;
 }
 
-void writeNumber(uint16_t numero)
+void USART_NewLine(void)
+{
+	USART_SendString("\r\n");
+}
+
+void USART_SendNumber(uint16_t numero)
 {
 	char buffer[6];
 	uint8_t i = 0;
-	uint8_t j;
-	char temp;
+	uint8_t j = 0;
+	char temp = 0;
 
 	if (numero == 0)
 	{
-		writeChar('0');
+		USART_Transmit('0');
 		return;
 	}
 
-	/*
-		Convertir numero a caracteres, pero queda invertido.
-	*/
 	while (numero > 0)
 	{
 		buffer[i] = (numero % 10) + '0';
@@ -144,27 +121,14 @@ void writeNumber(uint16_t numero)
 		i++;
 	}
 
-	/*
-		Invertir el arreglo para imprimir el numero correctamente.
-	*/
-	for (j = 0; j < i / 2; j++)
+	for (j = 0; j < (i / 2); j++)
 	{
 		temp = buffer[j];
-		buffer[j] = buffer[i - j - 1];
-		buffer[i - j - 1] = temp;
+		buffer[j] = buffer[i - 1 - j];
+		buffer[i - 1 - j] = temp;
 	}
 
-	/*
-		Enviar numero.
-	*/
-	for (j = 0; j < i; j++)
-	{
-		writeChar(buffer[j]);
-	}
-}
+	buffer[i] = '\0';
 
-void writeNewLine(void)
-{
-	writeChar('\r');
-	writeChar('\n');
+	USART_SendString(buffer);
 }

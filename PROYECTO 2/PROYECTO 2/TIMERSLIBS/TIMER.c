@@ -7,29 +7,21 @@
  */
 
 /****************************************/
-// Libraries
+// Librerias
 #include "TIMER.h"
 
 /****************************************/
-// Function prototypes
+// Prototipos internos
 
 static uint8_t getTimer0PrescalerBits(uint16_t prescaler);
 static uint8_t getTimer1PrescalerBits(uint16_t prescaler);
 
 /****************************************/
-// NON-Interrupt subroutines
+// Funciones
 
 void initTimer0_CTC(uint8_t comparacion, uint16_t prescaler)
 {
-	/*
-		Timer0 en modo CTC.
-		Timer0 es de 8 bits.
-		Registro de comparacion: OCR0A.
-
-		Esta funcion NO habilita interrupciones.
-		Si se desea usar interrupcion, se debe habilitar en main.c.
-	*/
-
+	// Configurar Timer0 en modo CTC
 	TCCR0A = 0;
 	TCCR0B = 0;
 	TCNT0 = 0;
@@ -45,15 +37,7 @@ void initTimer0_CTC(uint8_t comparacion, uint16_t prescaler)
 
 void initTimer1_CTC(uint16_t comparacion, uint16_t prescaler)
 {
-	/*
-		Timer1 en modo CTC.
-		Timer1 es de 16 bits.
-		Registro de comparacion: OCR1A.
-
-		Esta funcion NO habilita interrupciones.
-		Si se desea usar interrupcion, se debe habilitar en main.c.
-	*/
-
+	// Configurar Timer1 en modo CTC
 	TCCR1A = 0;
 	TCCR1B = 0;
 	TCNT1 = 0;
@@ -135,14 +119,7 @@ uint8_t timer0_usToTicks(uint32_t tiempo_us, uint16_t prescaler)
 {
 	uint32_t ticks;
 
-	/*
-		Formula general:
-
-		ticks = tiempo_us * F_CPU / prescaler / 1000000
-
-		Se resta 1 porque el Timer cuenta desde 0 hasta OCRnA.
-	*/
-
+	// Convertir microsegundos a cuentas de Timer0
 	ticks = ((tiempo_us * (F_CPU / prescaler)) / 1000000UL);
 
 	if (ticks > 0)
@@ -162,14 +139,7 @@ uint16_t timer1_usToTicks(uint32_t tiempo_us, uint16_t prescaler)
 {
 	uint32_t ticks;
 
-	/*
-		Formula general:
-
-		ticks = tiempo_us * F_CPU / prescaler / 1000000
-
-		Se resta 1 porque el Timer cuenta desde 0 hasta OCRnA.
-	*/
-
+	// Convertir microsegundos a cuentas de Timer1
 	ticks = ((tiempo_us * (F_CPU / prescaler)) / 1000000UL);
 
 	if (ticks > 0)

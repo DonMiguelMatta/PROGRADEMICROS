@@ -10,12 +10,12 @@
 #define TIMER_H_
 
 /****************************************/
-// Libraries
+// Librerias
 #include <avr/io.h>
 #include <stdint.h>
 
 /****************************************/
-// Constants
+// Constantes
 
 #ifndef F_CPU
 #define F_CPU 16000000UL
@@ -29,7 +29,7 @@
 #define TIMER_PRESCALER_1024 1024
 
 /****************************************/
-// Function prototypes
+// Prototipos
 
 void initTimer0_CTC(uint8_t comparacion, uint16_t prescaler);
 void initTimer1_CTC(uint16_t comparacion, uint16_t prescaler);
