@@ -12,7 +12,7 @@ main.d main.o: .././main.c \
  d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
  d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
  .././EEPROM/EEPROM.h .././ADCLIBS/ADC.h .././PWMLIBS/PWM.h \
- .././TIMERSLIBS/TIMER.h
+ .././TIMERSLIBS/TIMER.h .././UARTLIBS/UART.h
 
 d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -45,3 +45,5 @@ d:\migue\archivos\archivos\ de\ prgroama\ (x86)\atmel\studio\7.0\toolchain\avr8\
 .././PWMLIBS/PWM.h:
 
 .././TIMERSLIBS/TIMER.h:
+
+.././UARTLIBS/UART.h:
