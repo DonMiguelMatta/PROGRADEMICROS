@@ -1,5 +1,5 @@
 /*
- * ServoPWM.h
+ * PWM.h
  *
  * Created:
  * Author:
@@ -8,15 +8,17 @@
  * en D3, D5, D6 y D9 usando Timer1.
  */
 
-#ifndef SERVOPWM_H_
-#define SERVOPWM_H_
+#ifndef PWM_H_
+#define PWM_H_
 
 /****************************************/
 // Encabezado (Libraries)
 #include <avr/io.h>
+#include <stdint.h>
 
 /****************************************/
 // Function prototypes
+
 typedef enum
 {
 	SERVO_D3 = 0,
@@ -33,13 +35,16 @@ typedef struct
 	volatile unsigned int pulseTicks;
 } servo_t;
 
-void ADC_init(void);
-unsigned int ADC_read(unsigned char channel);
-
 void Servo_init(void);
 void Servo_attach(servo_t *servo, servo_channel_t channel);
+
 void Servo_writeMicroseconds(servo_t *servo, unsigned int pulseMicroseconds);
 void Servo_writeADC(servo_t *servo, unsigned int adcValue);
-unsigned int Servo_mapADC(unsigned int adcValue);
+void Servo_writeAngle(servo_t *servo, unsigned char angle);
 
-#endif /* SERVOPWM_H_ */
+unsigned int Servo_mapADC(unsigned int adcValue);
+unsigned int Servo_mapAngle(unsigned char angle);
+
+unsigned char Servo_getAngle(servo_t *servo);
+
+#endif /* PWM_H_ */

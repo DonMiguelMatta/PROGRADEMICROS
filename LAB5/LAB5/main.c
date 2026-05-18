@@ -1,9 +1,11 @@
 /*
- * Lab5
+ * Brazo Robotico - 4 Servos
  *
- * Author: Miguel Donis 22993
  * Description:
+ * Control de 4 servomotores en D3, D5, D6 y D9
+ * mediante potenciometros conectados en A0, A1, A2 y A3.
  */
+
 /****************************************/
 // Encabezado (Libraries)
 #define F_CPU 16000000UL
@@ -16,31 +18,37 @@ void setup(void);
 
 /****************************************/
 // Main Function
-servo_t servo1;
-servo_t servo2;
-softpwm_t led1;
+servo_t servoD3;
+servo_t servoD5;
+servo_t servoD6;
+servo_t servoD9;
 
 int main(void)
 {
-	unsigned int adcServo1 = 0;
-	unsigned int adcServo2 = 0;
-	unsigned int adcLed = 0;
+	unsigned int adcServoD3 = 0;
+	unsigned int adcServoD5 = 0;
+	unsigned int adcServoD6 = 0;
+	unsigned int adcServoD9 = 0;
 
 	setup();
 
 	while (1)
 	{
-		// A7 -> servo en D10
-		adcServo1 = ADC_read(7);
-		Servo_writeADC(&servo1, adcServo1);
+		// A0 -> servo en D3
+		adcServoD3 = ADC_read(0);
+		Servo_writeADC(&servoD3, adcServoD3);
 
-		// A6 -> servo en D9
-		adcServo2 = ADC_read(6);
-		Servo_writeADC(&servo2, adcServo2);
+		// A1 -> servo en D5
+		adcServoD5 = ADC_read(1);
+		Servo_writeADC(&servoD5, adcServoD5);
 
-		// A5 -> led en D3
-		adcLed = ADC_read(5);
-		SoftPWM_writeADC(&led1, adcLed);
+		// A2 -> servo en D6
+		adcServoD6 = ADC_read(2);
+		Servo_writeADC(&servoD6, adcServoD6);
+
+		// A3 -> servo en D9
+		adcServoD9 = ADC_read(3);
+		Servo_writeADC(&servoD9, adcServoD9);
 	}
 }
 
@@ -51,11 +59,11 @@ void setup(void)
 	ADC_init();
 
 	Servo_init();
-	Servo_attach(&servo1, SERVO_OC1B);
-	Servo_attach(&servo2, SERVO_OC1A);
 
-	SoftPWM_init();
-	SoftPWM_attach(&led1, &DDRD, &PORTD, PD3);
+	Servo_attach(&servoD3, SERVO_D3);
+	Servo_attach(&servoD5, SERVO_D5);
+	Servo_attach(&servoD6, SERVO_D6);
+	Servo_attach(&servoD9, SERVO_D9);
 }
 
 /****************************************/
