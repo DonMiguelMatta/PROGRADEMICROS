@@ -335,7 +335,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0xc16
+.text           0x00000000      0xc5a
  *(.vectors)
  .vectors       0x00000000       0x68 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -445,108 +445,108 @@ END GROUP
  .text.setup    0x0000018a       0x42 main.o
                 0x0000018a                setup
  .text.sendMenuUART
-                0x000001cc       0x3a main.o
+                0x000001cc       0x46 main.o
                 0x000001cc                sendMenuUART
  .text.savePosition
-                0x00000206       0x5a main.o
-                0x00000206                savePosition
+                0x00000212       0x5a main.o
+                0x00000212                savePosition
  .text.playPosition
-                0x00000260       0x66 main.o
-                0x00000260                playPosition
+                0x0000026c       0x66 main.o
+                0x0000026c                playPosition
  .text.setManualMode
-                0x000002c6        0xe main.o
-                0x000002c6                setManualMode
+                0x000002d2        0xe main.o
+                0x000002d2                setManualMode
  .text.processCommand
-                0x000002d4       0x66 main.o
-                0x000002d4                processCommand
+                0x000002e0       0x9e main.o
+                0x000002e0                processCommand
  .text.checkUART
-                0x0000033a       0x42 main.o
-                0x0000033a                checkUART
+                0x0000037e       0x42 main.o
+                0x0000037e                checkUART
  .text.updatePotentiometers
-                0x0000037c       0x3a main.o
-                0x0000037c                updatePotentiometers
+                0x000003c0       0x3a main.o
+                0x000003c0                updatePotentiometers
  .text.updateManualServos
-                0x000003b6       0x42 main.o
-                0x000003b6                updateManualServos
+                0x000003fa       0x42 main.o
+                0x000003fa                updateManualServos
  .text.sendPotTelemetry
-                0x000003f8       0x50 main.o
-                0x000003f8                sendPotTelemetry
+                0x0000043c       0x50 main.o
+                0x0000043c                sendPotTelemetry
  .text.getTicks1ms
-                0x00000448       0x18 main.o
-                0x00000448                getTicks1ms
+                0x0000048c       0x18 main.o
+                0x0000048c                getTicks1ms
  .text.checkButtons
-                0x00000460       0xdc main.o
-                0x00000460                checkButtons
- .text.main     0x0000053c       0x66 main.o
-                0x0000053c                main
+                0x000004a4       0xdc main.o
+                0x000004a4                checkButtons
+ .text.main     0x00000580       0x66 main.o
+                0x00000580                main
  .text.__vector_14
-                0x000005a2       0x4a main.o
-                0x000005a2                __vector_14
+                0x000005e6       0x4a main.o
+                0x000005e6                __vector_14
  .text.Servo_setNextCompare
-                0x000005ec       0x5e PWMLIBS/PWM.o
+                0x00000630       0x5e PWMLIBS/PWM.o
  .text.Servo_findNextEvent
-                0x0000064a       0x40 PWMLIBS/PWM.o
+                0x0000068e       0x40 PWMLIBS/PWM.o
  .text.Servo_ISRHandler
-                0x0000068a      0x10c PWMLIBS/PWM.o
+                0x000006ce      0x10c PWMLIBS/PWM.o
  .text.Servo_init
-                0x00000796       0x6c PWMLIBS/PWM.o
-                0x00000796                Servo_init
+                0x000007da       0x6c PWMLIBS/PWM.o
+                0x000007da                Servo_init
  .text.Servo_attach
-                0x00000802       0xd0 PWMLIBS/PWM.o
-                0x00000802                Servo_attach
+                0x00000846       0xd0 PWMLIBS/PWM.o
+                0x00000846                Servo_attach
  .text.Servo_writeMicroseconds
-                0x000008d2       0x44 PWMLIBS/PWM.o
-                0x000008d2                Servo_writeMicroseconds
+                0x00000916       0x44 PWMLIBS/PWM.o
+                0x00000916                Servo_writeMicroseconds
  .text.Servo_mapADC
-                0x00000916       0x2a PWMLIBS/PWM.o
-                0x00000916                Servo_mapADC
+                0x0000095a       0x2a PWMLIBS/PWM.o
+                0x0000095a                Servo_mapADC
  .text.Servo_writeADC
-                0x00000940       0x1a PWMLIBS/PWM.o
-                0x00000940                Servo_writeADC
+                0x00000984       0x1a PWMLIBS/PWM.o
+                0x00000984                Servo_writeADC
  .text.Servo_mapAngle
-                0x0000095a       0x26 PWMLIBS/PWM.o
-                0x0000095a                Servo_mapAngle
+                0x0000099e       0x26 PWMLIBS/PWM.o
+                0x0000099e                Servo_mapAngle
  .text.Servo_writeAngle
-                0x00000980       0x1a PWMLIBS/PWM.o
-                0x00000980                Servo_writeAngle
+                0x000009c4       0x1a PWMLIBS/PWM.o
+                0x000009c4                Servo_writeAngle
  .text.Servo_getAngle
-                0x0000099a       0x58 PWMLIBS/PWM.o
-                0x0000099a                Servo_getAngle
+                0x000009de       0x58 PWMLIBS/PWM.o
+                0x000009de                Servo_getAngle
  .text.__vector_11
-                0x000009f2       0x48 PWMLIBS/PWM.o
-                0x000009f2                __vector_11
+                0x00000a36       0x48 PWMLIBS/PWM.o
+                0x00000a36                __vector_11
  .text.USART_Init
-                0x00000a3a       0x28 UARTLIBS/UART.o
-                0x00000a3a                USART_Init
+                0x00000a7e       0x28 UARTLIBS/UART.o
+                0x00000a7e                USART_Init
  .text.USART_Transmit
-                0x00000a62        0xe UARTLIBS/UART.o
-                0x00000a62                USART_Transmit
+                0x00000aa6        0xe UARTLIBS/UART.o
+                0x00000aa6                USART_Transmit
  .text.USART_SendString
-                0x00000a70       0x1a UARTLIBS/UART.o
-                0x00000a70                USART_SendString
+                0x00000ab4       0x1a UARTLIBS/UART.o
+                0x00000ab4                USART_SendString
  .text.USART_Available
-                0x00000a8a       0x10 UARTLIBS/UART.o
-                0x00000a8a                USART_Available
+                0x00000ace       0x10 UARTLIBS/UART.o
+                0x00000ace                USART_Available
  .text.USART_ReadIfAvailable
-                0x00000a9a       0x24 UARTLIBS/UART.o
-                0x00000a9a                USART_ReadIfAvailable
+                0x00000ade       0x24 UARTLIBS/UART.o
+                0x00000ade                USART_ReadIfAvailable
  .text.USART_NewLine
-                0x00000abe        0xa UARTLIBS/UART.o
-                0x00000abe                USART_NewLine
+                0x00000b02        0xa UARTLIBS/UART.o
+                0x00000b02                USART_NewLine
  .text.USART_SendNumber
-                0x00000ac8       0xe8 UARTLIBS/UART.o
-                0x00000ac8                USART_SendNumber
+                0x00000b0c       0xe8 UARTLIBS/UART.o
+                0x00000b0c                USART_SendNumber
  .text.libgcc.div
-                0x00000bb0       0x44 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
-                0x00000bb0                __udivmodsi4
+                0x00000bf4       0x44 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+                0x00000bf4                __udivmodsi4
  .text.libgcc.mul
-                0x00000bf4       0x1e d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
-                0x00000bf4                __umulhisi3
-                0x00000c12                . = ALIGN (0x2)
+                0x00000c38       0x1e d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+                0x00000c38                __umulhisi3
+                0x00000c56                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000c12        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000c12                _exit
-                0x00000c12                exit
+ .fini9         0x00000c56        0x0 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x00000c56                _exit
+                0x00000c56                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -565,11 +565,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000c12        0x4 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x00000c56        0x4 d:/migue/archivos/archivos de prgroama (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000c16                _etext = .
+                0x00000c5a                _etext = .
 
-.data           0x00800100      0x158 load address 0x00000c16
+.data           0x00800100      0x18c load address 0x00000c5a
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -584,58 +584,57 @@ END GROUP
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00800103      0x151 main.o
+                0x00800103      0x186 main.o
  .rodata.str1.1
-                0x00800254        0x3 UARTLIBS/UART.o
+                0x00800289        0x3 UARTLIBS/UART.o
  *(.gnu.linkonce.r*)
-                0x00800258                . = ALIGN (0x2)
- *fill*         0x00800257        0x1 
-                0x00800258                _edata = .
-                0x00800258                PROVIDE (__data_end, .)
+                0x0080028c                . = ALIGN (0x2)
+                0x0080028c                _edata = .
+                0x0080028c                PROVIDE (__data_end, .)
 
-.bss            0x00800258       0x3d
-                0x00800258                PROVIDE (__bss_start, .)
+.bss            0x0080028c       0x3d
+                0x0080028c                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.adcPotA3  0x00800258        0x2 main.o
-                0x00800258                adcPotA3
- .bss.adcPotA2  0x0080025a        0x2 main.o
-                0x0080025a                adcPotA2
- .bss.adcPotA1  0x0080025c        0x2 main.o
-                0x0080025c                adcPotA1
- .bss.adcPotA0  0x0080025e        0x2 main.o
-                0x0080025e                adcPotA0
+ .bss.adcPotA3  0x0080028c        0x2 main.o
+                0x0080028c                adcPotA3
+ .bss.adcPotA2  0x0080028e        0x2 main.o
+                0x0080028e                adcPotA2
+ .bss.adcPotA1  0x00800290        0x2 main.o
+                0x00800290                adcPotA1
+ .bss.adcPotA0  0x00800292        0x2 main.o
+                0x00800292                adcPotA0
  .bss.lastTelemetryTime
-                0x00800260        0x4 main.o
-                0x00800260                lastTelemetryTime
+                0x00800294        0x4 main.o
+                0x00800294                lastTelemetryTime
  .bss.lastButtonTime
-                0x00800264        0x4 main.o
-                0x00800264                lastButtonTime
- .bss.ticks1ms  0x00800268        0x4 main.o
-                0x00800268                ticks1ms
+                0x00800298        0x4 main.o
+                0x00800298                lastButtonTime
+ .bss.ticks1ms  0x0080029c        0x4 main.o
+                0x0080029c                ticks1ms
  .bss.servoNextEventTicks
-                0x0080026c        0x2 PWMLIBS/PWM.o
+                0x008002a0        0x2 PWMLIBS/PWM.o
  .bss.servoElapsedTicks
-                0x0080026e        0x2 PWMLIBS/PWM.o
+                0x008002a2        0x2 PWMLIBS/PWM.o
  .bss.servoTotal
-                0x00800270        0x1 PWMLIBS/PWM.o
+                0x008002a4        0x1 PWMLIBS/PWM.o
  .bss.servoDevices
-                0x00800271        0x8 PWMLIBS/PWM.o
+                0x008002a5        0x8 PWMLIBS/PWM.o
  *(COMMON)
- COMMON         0x00800279       0x1c main.o
-                0x00800279                servoD5
-                0x00800280                servoD6
-                0x00800287                servoD9
-                0x0080028e                servoD3
-                0x00800295                PROVIDE (__bss_end, .)
-                0x00000c16                __data_load_start = LOADADDR (.data)
-                0x00000d6e                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x008002ad       0x1c main.o
+                0x008002ad                servoD5
+                0x008002b4                servoD6
+                0x008002bb                servoD9
+                0x008002c2                servoD3
+                0x008002c9                PROVIDE (__bss_end, .)
+                0x00000c5a                __data_load_start = LOADADDR (.data)
+                0x00000de6                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800295        0x0
+.noinit         0x008002c9        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800295                _end = .
+                0x008002c9                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -720,32 +719,32 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1ba3
+.debug_info     0x00000000     0x1c18
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4      0x106 ADCLIBS/ADC.o
  .debug_info    0x000006fa      0x23a EEPROM/EEPROM.o
- .debug_info    0x00000934      0xb66 main.o
- .debug_info    0x0000149a      0x4c9 PWMLIBS/PWM.o
- .debug_info    0x00001963      0x240 UARTLIBS/UART.o
+ .debug_info    0x00000934      0xbdb main.o
+ .debug_info    0x0000150f      0x4c9 PWMLIBS/PWM.o
+ .debug_info    0x000019d8      0x240 UARTLIBS/UART.o
 
-.debug_abbrev   0x00000000      0xcc6
+.debug_abbrev   0x00000000      0xcef
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2       0xbc ADCLIBS/ADC.o
  .debug_abbrev  0x0000065e      0x13c EEPROM/EEPROM.o
- .debug_abbrev  0x0000079a      0x1eb main.o
- .debug_abbrev  0x00000985      0x1ea PWMLIBS/PWM.o
- .debug_abbrev  0x00000b6f      0x157 UARTLIBS/UART.o
+ .debug_abbrev  0x0000079a      0x214 main.o
+ .debug_abbrev  0x000009ae      0x1ea PWMLIBS/PWM.o
+ .debug_abbrev  0x00000b98      0x157 UARTLIBS/UART.o
 
-.debug_line     0x00000000     0x1013
+.debug_line     0x00000000     0x1067
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 D:/migue/Archivos/Archivos de prgroama (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_line    0x00000134      0x122 ADCLIBS/ADC.o
  .debug_line    0x00000256      0x1dc EEPROM/EEPROM.o
- .debug_line    0x00000432      0x549 main.o
- .debug_line    0x0000097b      0x452 PWMLIBS/PWM.o
- .debug_line    0x00000dcd      0x246 UARTLIBS/UART.o
+ .debug_line    0x00000432      0x59d main.o
+ .debug_line    0x000009cf      0x452 PWMLIBS/PWM.o
+ .debug_line    0x00000e21      0x246 UARTLIBS/UART.o
 
 .debug_frame    0x00000000      0x47c
  *(.debug_frame)
@@ -769,13 +768,13 @@ END GROUP
  .debug_str     0x0000081a       0x4e UARTLIBS/UART.o
                                 0x245 (size before relaxing)
 
-.debug_loc      0x00000000      0xe6d
+.debug_loc      0x00000000      0xe9f
  *(.debug_loc)
  .debug_loc     0x00000000       0x67 ADCLIBS/ADC.o
  .debug_loc     0x00000067      0x357 EEPROM/EEPROM.o
- .debug_loc     0x000003be      0x278 main.o
- .debug_loc     0x00000636      0x63c PWMLIBS/PWM.o
- .debug_loc     0x00000c72      0x1fb UARTLIBS/UART.o
+ .debug_loc     0x000003be      0x2aa main.o
+ .debug_loc     0x00000668      0x63c PWMLIBS/PWM.o
+ .debug_loc     0x00000ca4      0x1fb UARTLIBS/UART.o
 
 .debug_macinfo
  *(.debug_macinfo)

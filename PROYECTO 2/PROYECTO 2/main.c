@@ -2,7 +2,7 @@
  * main.c
  *
  * Created:
- * Author:
+ * Author: Miguel Donis 22993
  * Description:
  * Brazo robotico con 4 servos, 4 potenciometros y comunicacion UART.
  */
@@ -189,6 +189,9 @@ void sendMenuUART(void)
 
 	writeString("3: reproducir posicion guardada");
 	writeNewLine();
+	
+	writeString("O/F: encender o apagar LED");
+	writeNewLine();
 	writeNewLine();
 }
 
@@ -237,6 +240,18 @@ void processCommand(char command)
 			writeString("No hay posicion guardada");
 			writeNewLine();
 		}
+	}
+	else if ((command == 'O') || (command == 'o'))
+	{
+		PORTD |= (1 << LED_PIN);
+		writeString("LED encendido");
+		writeNewLine();
+	}
+	else if ((command == 'F') || (command == 'f'))
+	{
+		PORTD &= ~(1 << LED_PIN);
+		writeString("LED apagado");
+		writeNewLine();
 	}
 	else
 	{

@@ -23,7 +23,7 @@
 #define SERVO_PERIOD_TICKS    2000
 #define SERVO_TIMER_COUNTS    20
 
-#define SERVO_MIN_US          1000
+#define SERVO_MIN_US          500
 #define SERVO_CENTER_US       1500
 #define SERVO_MAX_US          2000
 
